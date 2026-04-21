@@ -31,9 +31,6 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "dream_canvas", title: "Your dream", instructions: "Write your dream freely, then the doing / having / being triad." },
   { id: "assets_bank", title: "Assets & strengths bank", instructions: "Tap everything that applies to you. Go broad." },
   { id: "strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
-  { id: "needs_scale", title: "Needs", instructions: "Rate how met each need is right now." },
-  { id: "strengths_card_sort", title: "Strengths card sort", instructions: "Pick your top 5." },
-  { id: "values_card_sort", title: "Values card sort", instructions: "Pick your top 5 values." },
 ];
 
 function ExerciseRenderer({

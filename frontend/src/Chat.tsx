@@ -20,6 +20,8 @@ import InnerJudge from "./exercises/InnerJudge";
 import FairyLetter from "./exercises/FairyLetter";
 import InhibitorsByDomain from "./exercises/InhibitorsByDomain";
 import PopAnswers from "./exercises/PopAnswers";
+import MilestonePlan from "./exercises/MilestonePlan";
+import ConstraintsPremortem from "./exercises/ConstraintsPremortem";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -55,6 +57,8 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "s9_fairy_letter", title: "Letter from the fairy self", instructions: "A short letter from the wisest, kindest you — to the you sitting here now." },
   { id: "s9_inhibitors_by_domain", title: "Inhibitors by life domain", instructions: "6 domains. Where does the pattern show up — relationships, learning, daily, achievement, finance, overall?" },
   { id: "s9_pop_answers", title: "Pop answers — fast, honest, first-thought", instructions: "4 questions. First thing that comes. Bypass the censor." },
+  { id: "s10_milestone_plan", title: "Your plan — stepping stones, backward from the goal", instructions: "4-6 stepping stones between today and the goal. Each one a sub-outcome, tagged with a strength and a value." },
+  { id: "s10_constraints_premortem", title: "Constraints pre-mortem (אילוצים)", instructions: "What's likely to go sideways, what handles it, what we already know how to handle." },
 ];
 
 function ExerciseRenderer({
@@ -244,6 +248,37 @@ function ExerciseRenderer({
         <PopAnswers
           title={payload.title}
           instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s10_milestone_plan":
+      return (
+        <MilestonePlan
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
+          targetDate={payload.config?.targetDate as string | undefined}
+          topStrengths={payload.config?.topStrengths as string[] | undefined}
+          topValues={payload.config?.topValues as string[] | undefined}
+          topNeeds={payload.config?.topNeeds as string[] | undefined}
+          biggestGap={payload.config?.biggestGap as string | undefined}
+          topRestrainer={payload.config?.topRestrainer as string | undefined}
+          topAdvancers={payload.config?.topAdvancers as string[] | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s10_constraints_premortem":
+      return (
+        <ConstraintsPremortem
+          title={payload.title}
+          instructions={payload.instructions}
+          topRestrainer={payload.config?.topRestrainer as string | undefined}
+          restrainerOrigin={
+            payload.config?.restrainerOrigin as string | undefined
+          }
+          restrainerProtectAgainst={
+            payload.config?.restrainerProtectAgainst as string | undefined
+          }
           onSubmit={onSubmit}
         />
       );

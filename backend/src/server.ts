@@ -473,6 +473,77 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     );
     return lines.join("\n");
   }
+  if (
+    exerciseId === "s10_milestone_plan" &&
+    isObj(data) &&
+    Array.isArray((data as any).stones)
+  ) {
+    const d = data as {
+      goal: string;
+      targetDate: string;
+      stones: Array<{
+        subOutcome: string;
+        timeWindow: string;
+        owner: string;
+        resources: string;
+        strength: string;
+        value: string;
+      }>;
+      startingPoint: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client built their S10 backward-planned milestone plan.`);
+    lines.push(``);
+    if (d.goal) lines.push(`GOAL: ${d.goal}`);
+    if (d.targetDate) lines.push(`TARGET DATE: ${d.targetDate}`);
+    lines.push(``);
+    lines.push(`STEPPING STONES (top = closest to goal, bottom = closest to today):`);
+    d.stones.forEach((s, i) => {
+      const n = d.stones.length - i;
+      lines.push(`  Stone ${n}: ${s.subOutcome}`);
+      lines.push(`    when: ${s.timeWindow} · owner: ${s.owner}`);
+      lines.push(`    resources/people: ${s.resources}`);
+      lines.push(`    strength deployed: ${s.strength} · value honored: ${s.value}`);
+    });
+    lines.push(``);
+    lines.push(`STARTING POINT (today): ${d.startingPoint}`);
+    lines.push(``);
+    lines.push(
+      `Do NOT narrate the plan back. Ask 2-3 targeted questions: (a) if any stone is missing a strength or value tag, ask which one carries it. (b) sanity-check the pace — is it right? (c) if 'people' is thin, probe for names not roles. (d) surface any stone the S9 top restrainer would threaten as written. Then move to the constraints pre-mortem.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s10_constraints_premortem" &&
+    isObj(data) &&
+    Array.isArray((data as any).rows)
+  ) {
+    const d = data as {
+      rows: Array<{
+        constraint: string;
+        requiredAction: string;
+        known: string;
+        isTopRestrainer?: boolean;
+      }>;
+      foldInto: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client completed the constraints pre-mortem (Yozmot אילוצים).`);
+    lines.push(``);
+    for (const r of d.rows) {
+      const tag = r.isTopRestrainer ? " [S9 top restrainer]" : "";
+      const know = r.known === "known" ? "KNOWN" : "unknown";
+      lines.push(`- ${r.constraint}${tag} (${know})`);
+      lines.push(`    action: ${r.requiredAction}`);
+    }
+    lines.push(``);
+    lines.push(`FOLD INTO PLAN STRUCTURE: ${d.foldInto}`);
+    lines.push(``);
+    lines.push(
+      `The client has named how to handle the constraints they already know. Treat the fold-in as an update to the milestone plan — mentally integrate it before the reflection arc. Then ask the feel-check question: 'looking at the whole plan now, how does it FEEL — doable, heavy, exciting, daunting?'`,
+    );
+    return lines.join("\n");
+  }
   if (exerciseId === "s6_values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

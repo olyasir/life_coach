@@ -220,6 +220,29 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     if (one.length) lines.push(`Score 1 (barely): ${one.join(", ")}`);
     return lines.join("\n");
   }
+  if (exerciseId === "values_bank" && isObj(data) && Array.isArray((data as any).selected)) {
+    const picks = (data as { selected: string[] }).selected;
+    return `Client selected ${picks.length} values from the bank:\n${picks.map((p) => `- ${p}`).join("\n")}`;
+  }
+  if (exerciseId === "values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
+    const values = (data as {
+      values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;
+    }).values;
+    const sorted = [...values].sort((a, b) => a.currentExpression - b.currentExpression);
+    const lines: string[] = [];
+    lines.push(`Client's TOP 5 values (sorted by gap — lowest expressed first):`);
+    for (const v of sorted) {
+      lines.push(`- ${v.name} (${v.currentExpression}/10)`);
+      lines.push(`    Means to them: ${v.meaning}`);
+      lines.push(`    What they'd do to live it more: ${v.action}`);
+    }
+    const lowest = sorted[0];
+    if (lowest) {
+      lines.push(``);
+      lines.push(`GAP: lowest-expressed top value is "${lowest.name}" at ${lowest.currentExpression}/10 — this is the priority for today's homework.`);
+    }
+    return lines.join("\n");
+  }
   if (isObj(data)) {
     const entries = Object.entries(data as Record<string, unknown>);
     if (entries.length > 0) {

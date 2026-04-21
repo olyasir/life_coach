@@ -9,6 +9,8 @@ import DreamArchaeology from "./exercises/DreamArchaeology";
 import DreamCanvas from "./exercises/DreamCanvas";
 import AssetsBank from "./exercises/AssetsBank";
 import StrengthsInventory from "./exercises/StrengthsInventory";
+import ValuesBank from "./exercises/ValuesBank";
+import ValuesAssessment from "./exercises/ValuesAssessment";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -31,6 +33,8 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "dream_canvas", title: "Your dream", instructions: "Write your dream freely, then the doing / having / being triad." },
   { id: "assets_bank", title: "Assets & strengths bank", instructions: "Tap everything that applies to you. Go broad." },
   { id: "strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
+  { id: "values_bank", title: "Values bank", instructions: "Tap every value that resonates. Go broad." },
+  { id: "values_assessment", title: "Top 5 values — what they mean and how you live them", instructions: "For each of your top 5 values: what it means to you, how expressed 1-10, one action to live it more." },
 ];
 
 function ExerciseRenderer({
@@ -94,6 +98,22 @@ function ExerciseRenderer({
     case "strengths_inventory":
       return (
         <StrengthsInventory
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "values_bank":
+      return (
+        <ValuesBank
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "values_assessment":
+      return (
+        <ValuesAssessment
           title={payload.title}
           instructions={payload.instructions}
           onSubmit={onSubmit}

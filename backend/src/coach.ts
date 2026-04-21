@@ -103,6 +103,7 @@ const TOOLS: Anthropic.Tool[] = [
             "yes_i_can",
             "needs_scale",
             "goal_canvas",
+            "ten_reasons",
             "force_field",
             "weekly_plan",
             "progress_check",

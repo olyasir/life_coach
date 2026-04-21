@@ -255,6 +255,54 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
   if (exerciseId === "yes_i_can") {
     return `Client acknowledged the Yes-I-Can integrating summary. Ask the landing question: "seeing all of this together — what do you notice?" Save their response as a realization memory.`;
   }
+  if (exerciseId === "goal_canvas" && isObj(data)) {
+    const d = data as {
+      goalStatement: string;
+      valueHonored: string;
+      needMet: string;
+      targetDate: string;
+      passion: number;
+      willingToDo: string;
+      priceWillingToPay: string;
+      coreTest: { confirmed: boolean; note: string };
+      ecologicalTest: { confirmed: boolean; note: string };
+      realityTest: { confirmed: boolean; note: string };
+    };
+    const lines: string[] = [];
+    lines.push(`Client finalized their S8 GOAL on the canvas.`);
+    lines.push(``);
+    lines.push(`GOAL STATEMENT: ${d.goalStatement}`);
+    lines.push(`TARGET DATE: ${d.targetDate}`);
+    lines.push(`VALUE HONORED: ${d.valueHonored}`);
+    lines.push(`NEED MET: ${d.needMet}`);
+    lines.push(`PASSION: ${d.passion}/10`);
+    lines.push(``);
+    lines.push(`WILLING TO DO: ${d.willingToDo}`);
+    lines.push(`PRICE WILLING TO PAY: ${d.priceWillingToPay}`);
+    lines.push(``);
+    lines.push(`Quality tests:`);
+    lines.push(`- CORE (values/beliefs): ${d.coreTest.confirmed ? "✓" : "✗"} — ${d.coreTest.note}`);
+    lines.push(`- ECOLOGICAL (others affected): ${d.ecologicalTest.confirmed ? "✓" : "✗"} — ${d.ecologicalTest.note}`);
+    lines.push(`- REALITY (resources): ${d.realityTest.confirmed ? "✓" : "✗"} — ${d.realityTest.note}`);
+    lines.push(``);
+    lines.push(`Save the final goal statement as a HIGH-CONFIDENCE fact memory. Then move into the ten_reasons exercise.`);
+    return lines.join("\n");
+  }
+  if (exerciseId === "ten_reasons" && isObj(data) && Array.isArray((data as any).reasons)) {
+    const d = data as { goal: string; reasons: string[] };
+    const lines: string[] = [];
+    lines.push(`Client completed the TEN REASONS exercise.`);
+    if (d.goal) {
+      lines.push(``);
+      lines.push(`Goal: ${d.goal}`);
+    }
+    lines.push(``);
+    lines.push(`Their ten reasons:`);
+    d.reasons.forEach((r, i) => lines.push(`${i + 1}. ${r}`));
+    lines.push(``);
+    lines.push(`Read them carefully. Reflect back the PATTERN/theme across the ten (not a read-back). Then ask which reason has the most CHARGE — the one they'd put on their wall. Save that as a realization memory.`);
+    return lines.join("\n");
+  }
   if (exerciseId === "values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

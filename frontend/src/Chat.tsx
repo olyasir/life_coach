@@ -13,6 +13,8 @@ import ValuesBank from "./exercises/ValuesBank";
 import ValuesAssessment from "./exercises/ValuesAssessment";
 import SixNeedsReflection from "./exercises/SixNeedsReflection";
 import YesICan from "./exercises/YesICan";
+import GoalCanvas from "./exercises/GoalCanvas";
+import TenReasons from "./exercises/TenReasons";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -39,6 +41,8 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "values_assessment", title: "Top 5 values — what they mean and how you live them", instructions: "For each of your top 5 values: what it means to you, how expressed 1-10, one action to live it more." },
   { id: "six_needs_reflection", title: "Six universal needs", instructions: "Robbins-Madanes needs. For each: how it shows up in you, importance + fulfillment 1-10." },
   { id: "yes_i_can", title: "Yes I can — the picture so far", instructions: "Everything we've named together (preview is empty — real view filled from memory in S7)." },
+  { id: "goal_canvas", title: "Your goal — in your own hand", instructions: "The goal statement, the value it honors, the need it meets, target date, passion, price, and the three quality tests." },
+  { id: "ten_reasons", title: "Ten reasons why I want this goal", instructions: "The first three are easy. The middle four make you think. The last three are the real ones." },
 ];
 
 function ExerciseRenderer({
@@ -148,6 +152,27 @@ function ExerciseRenderer({
               | Array<{ name: string; gap: number }>
               | undefined
           }
+          onSubmit={onSubmit}
+        />
+      );
+    case "goal_canvas":
+      return (
+        <GoalCanvas
+          title={payload.title}
+          instructions={payload.instructions}
+          goalDraft={payload.config?.goalDraft as string | undefined}
+          topValues={payload.config?.topValues as string[] | undefined}
+          topNeeds={payload.config?.topNeeds as string[] | undefined}
+          biggestGap={payload.config?.biggestGap as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "ten_reasons":
+      return (
+        <TenReasons
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
           onSubmit={onSubmit}
         />
       );

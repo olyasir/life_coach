@@ -13,6 +13,13 @@ import SixNeedsReflection from "./exercises/SixNeedsReflection";
 import YesICan from "./exercises/YesICan";
 import GoalCanvas from "./exercises/GoalCanvas";
 import TenReasons from "./exercises/TenReasons";
+import ForceField from "./exercises/ForceField";
+import InhibitorsBank from "./exercises/InhibitorsBank";
+import ImpsTaming from "./exercises/ImpsTaming";
+import InnerJudge from "./exercises/InnerJudge";
+import FairyLetter from "./exercises/FairyLetter";
+import InhibitorsByDomain from "./exercises/InhibitorsByDomain";
+import PopAnswers from "./exercises/PopAnswers";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -41,6 +48,13 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "s7_yes_i_can", title: "Yes I can — the picture so far", instructions: "Everything we've named together (preview is empty — real view filled from memory in S7)." },
   { id: "s8_goal_canvas", title: "Your goal — in your own hand", instructions: "The goal statement, the value it honors, the need it meets, target date, passion, price, and the three quality tests." },
   { id: "s8_ten_reasons", title: "Ten reasons why I want this goal", instructions: "The first three are easy. The middle four make you think. The last three are the real ones." },
+  { id: "s9_force_field", title: "The field around your goal", instructions: "What's already pulling you toward it, what's holding you back, and what wants to be expressed." },
+  { id: "s9_inhibitors_bank", title: "Katz inhibitors bank", instructions: "26 common inhibitors. Pick what echoes. Rank top 5. 3 questions on each of the 5." },
+  { id: "s9_imps_taming", title: "Name your imps", instructions: "Small internal voices. Name them, trigger, how to tame. 1-3 is usually right." },
+  { id: "s9_inner_judge", title: "The inner judge", instructions: "Catch the critic voice on the page. 4+ statements. Mark the 2 loudest." },
+  { id: "s9_fairy_letter", title: "Letter from the fairy self", instructions: "A short letter from the wisest, kindest you — to the you sitting here now." },
+  { id: "s9_inhibitors_by_domain", title: "Inhibitors by life domain", instructions: "6 domains. Where does the pattern show up — relationships, learning, daily, achievement, finance, overall?" },
+  { id: "s9_pop_answers", title: "Pop answers — fast, honest, first-thought", instructions: "4 questions. First thing that comes. Bypass the censor." },
 ];
 
 function ExerciseRenderer({
@@ -171,6 +185,65 @@ function ExerciseRenderer({
           title={payload.title}
           instructions={payload.instructions}
           goal={payload.config?.goal as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_force_field":
+      return (
+        <ForceField
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
+          targetDate={payload.config?.targetDate as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_inhibitors_bank":
+      return (
+        <InhibitorsBank
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_imps_taming":
+      return (
+        <ImpsTaming
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_inner_judge":
+      return (
+        <InnerJudge
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_fairy_letter":
+      return (
+        <FairyLetter
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_inhibitors_by_domain":
+      return (
+        <InhibitorsByDomain
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s9_pop_answers":
+      return (
+        <PopAnswers
+          title={payload.title}
+          instructions={payload.instructions}
           onSubmit={onSubmit}
         />
       );

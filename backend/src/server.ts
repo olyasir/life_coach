@@ -303,6 +303,176 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     lines.push(`Read them carefully. Reflect back the PATTERN/theme across the ten (not a read-back). Then ask which reason has the most CHARGE — the one they'd put on their wall. Save that as a realization memory.`);
     return lines.join("\n");
   }
+  if (exerciseId === "s9_force_field" && isObj(data)) {
+    const d = data as {
+      advancers: string[];
+      restrainers: string[];
+      wantsToBeExpressed?: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client completed the S9 force-field canvas.`);
+    lines.push(``);
+    lines.push(`FORCES ADVANCING (${d.advancers.length}):`);
+    d.advancers.forEach((a, i) => lines.push(`  ${i + 1}. ${a}`));
+    lines.push(``);
+    lines.push(`FORCES RESTRAINING (${d.restrainers.length}):`);
+    d.restrainers.forEach((r, i) => lines.push(`  ${i + 1}. ${r}`));
+    if (d.wantsToBeExpressed?.trim()) {
+      lines.push(``);
+      lines.push(`WHAT WANTS TO BE EXPRESSED: ${d.wantsToBeExpressed}`);
+    }
+    lines.push(``);
+    lines.push(
+      `Do NOT simply read back. Pick the longest / most-charged column and go there first with ONE question. Stay slow. Allow silence after each answer. Specific people named should be saved as person memories.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_inhibitors_bank" &&
+    isObj(data) &&
+    Array.isArray((data as any).topFive)
+  ) {
+    const d = data as {
+      picked: string[];
+      topFive: string[];
+      answers: Array<{
+        name: string;
+        definition: string;
+        howShowsUp: string;
+        howBlocks: string;
+      }>;
+    };
+    const lines: string[] = [];
+    lines.push(`Client completed the Reuven Katz inhibitors bank.`);
+    lines.push(``);
+    lines.push(`All picked (${d.picked.length}): ${d.picked.join(", ")}`);
+    lines.push(``);
+    lines.push(`TOP 5:`);
+    for (const a of d.answers) {
+      lines.push(`- ${a.name}`);
+      lines.push(`    definition: ${a.definition}`);
+      lines.push(`    how it shows up: ${a.howShowsUp}`);
+      lines.push(`    how it blocks goal: ${a.howBlocks}`);
+    }
+    lines.push(``);
+    lines.push(
+      `Ask: which of these has the most WEIGHT right now — which one, if it shifted, would change the most? Then origin + protect-against reframe on that top one.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_imps_taming" &&
+    isObj(data) &&
+    Array.isArray((data as any).imps)
+  ) {
+    const d = data as {
+      imps: Array<{ name: string; trigger: string; taming: string }>;
+    };
+    const lines: string[] = [];
+    lines.push(`Client named their imps (Richard Carson framework).`);
+    lines.push(``);
+    for (const imp of d.imps) {
+      lines.push(`- ${imp.name}`);
+      lines.push(`    trigger: ${imp.trigger}`);
+      lines.push(`    taming: ${imp.taming}`);
+    }
+    lines.push(``);
+    lines.push(
+      `Ask which imp is loudest this week, and what the goal work will stir up in it. The taming line they wrote is a candidate homework move.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_inner_judge" &&
+    isObj(data) &&
+    Array.isArray((data as any).statements)
+  ) {
+    const d = data as { statements: string[]; loudest: string[] };
+    const lines: string[] = [];
+    lines.push(`Client caught the inner-judge voice on the page.`);
+    lines.push(``);
+    lines.push(`All statements:`);
+    d.statements.forEach((s, i) => lines.push(`  ${i + 1}. ${s}`));
+    lines.push(``);
+    lines.push(`Loudest (marked):`);
+    d.loudest.forEach((s) => lines.push(`  ★ ${s}`));
+    lines.push(``);
+    lines.push(
+      `Ask: "whose voice is that, actually?" — often it's a real person from earlier in life. Then: "if that voice weren't running, what would you do differently this week?"`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_fairy_letter" &&
+    isObj(data) &&
+    typeof (data as any).letter === "string"
+  ) {
+    const d = data as { letter: string };
+    const lines: string[] = [];
+    lines.push(`Client wrote the letter from their fairy/resource self.`);
+    lines.push(``);
+    lines.push(`LETTER:`);
+    lines.push(d.letter);
+    lines.push(``);
+    lines.push(
+      `Read the letter slowly. Reflect what the fairy voice KNOWS that the everyday voice doesn't. Ask: "which line in this letter would you want to remember this week?" Save it as a realization memory.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_inhibitors_by_domain" &&
+    isObj(data) &&
+    isObj((data as any).answers)
+  ) {
+    const d = data as { answers: Record<string, string> };
+    const labels: Record<string, string> = {
+      relationships: "Relationships",
+      learning: "Learning & growth",
+      daily: "Daily life & habits",
+      achievement: "Achievement & ambition",
+      finance: "Money & resources",
+      overall: "Overall life",
+    };
+    const lines: string[] = [];
+    lines.push(`Client surfaced inhibitors across life domains.`);
+    lines.push(``);
+    for (const [k, v] of Object.entries(d.answers)) {
+      if (!v?.trim()) continue;
+      lines.push(`- ${labels[k] ?? k}:`);
+      lines.push(`    ${v}`);
+    }
+    lines.push(``);
+    lines.push(
+      `Look for the repeating pattern — is the same inhibitor showing up in multiple domains? That's the one to name. Ask which domain surprised them most.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s9_pop_answers" &&
+    isObj(data) &&
+    isObj((data as any).answers)
+  ) {
+    const d = data as { answers: Record<string, string> };
+    const labels: Record<string, string> = {
+      release: "What I need to let go of",
+      self_confidence: "Where self-confidence is weakest (and why)",
+      image: "Image I'm attached to (and what it costs)",
+      failures: "Failure I'm still carrying (and what it says)",
+    };
+    const lines: string[] = [];
+    lines.push(`Client answered the 4 pop-intuition questions (bypassing the censor).`);
+    lines.push(``);
+    for (const [k, v] of Object.entries(d.answers)) {
+      if (!v?.trim()) continue;
+      lines.push(`- ${labels[k] ?? k}:`);
+      lines.push(`    ${v}`);
+    }
+    lines.push(``);
+    lines.push(
+      `Pick the ONE answer with the most charge and open it up with a single question. Don't march through all 4. Save the chosen thread as a realization memory.`,
+    );
+    return lines.join("\n");
+  }
   if (exerciseId === "s6_values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

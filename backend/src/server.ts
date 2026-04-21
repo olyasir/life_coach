@@ -723,49 +723,6 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     return lines.join("\n");
   }
   if (
-    exerciseId === "s12_journey_reflection" &&
-    isObj(data) &&
-    typeof (data as any).treasuresFound === "string"
-  ) {
-    const d = data as {
-      treasuresFound: string;
-      placesReached: string;
-      difficulties: string;
-      significantPeople: string;
-      placesWantedNext: string;
-      feelingAtEnd: string;
-      letterToSession1Self: string;
-    };
-    const lines: string[] = [];
-    lines.push(`Client completed the S12 journey reflection canvas.`);
-    lines.push(``);
-    lines.push(`TREASURES FOUND IN MYSELF:`);
-    lines.push(`  ${d.treasuresFound}`);
-    lines.push(``);
-    lines.push(`WONDERFUL PLACES REACHED:`);
-    lines.push(`  ${d.placesReached}`);
-    lines.push(``);
-    lines.push(`DIFFICULTIES ALONG THE WAY:`);
-    lines.push(`  ${d.difficulties}`);
-    lines.push(``);
-    lines.push(`SIGNIFICANT PEOPLE MET ON THE JOURNEY:`);
-    lines.push(`  ${d.significantPeople}`);
-    lines.push(``);
-    lines.push(`PLACES STILL WANTED (journey continues):`);
-    lines.push(`  ${d.placesWantedNext}`);
-    lines.push(``);
-    lines.push(`FEELING AT END OF JOURNEY:`);
-    lines.push(`  ${d.feelingAtEnd}`);
-    lines.push(``);
-    lines.push(`ONE THING TO TELL SESSION-1 SELF:`);
-    lines.push(`  ${d.letterToSession1Self}`);
-    lines.push(``);
-    lines.push(
-      `Do NOT narrate this back. Ask ONE question: 'which of these sections surprised you as you wrote it?' Let silence follow. The answer is often the real insight of the session — save as high-confidence realization memory. Then move to the letter to future self.`,
-    );
-    return lines.join("\n");
-  }
-  if (
     exerciseId === "s12_letter_to_future_self" &&
     isObj(data) &&
     typeof (data as any).body === "string"
@@ -786,38 +743,6 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     lines.push(``);
     lines.push(
       `Do NOT read it back. Do NOT interpret. Ask ONE question: 'what did it feel like to write in the as-if voice?' Then silence. Save the letter VERBATIM as a high-confidence realization memory — this is the single piece most clients reread. Then move to building the self-coaching toolkit in chat (3-5 questions/practices the client will carry forward), then the explicit goodbye. No homework.`,
-    );
-    return lines.join("\n");
-  }
-  if (
-    exerciseId === "laser_tgrow" &&
-    isObj(data) &&
-    typeof (data as any).topic === "string"
-  ) {
-    const d = data as {
-      topic: string;
-      goals: string;
-      reality: string;
-      options: string[];
-      will: { action: string; when: string; support: string };
-    };
-    const lines: string[] = [];
-    lines.push(`Client completed a LASER T-GROW detour.`);
-    lines.push(``);
-    lines.push(`T (Topic): ${d.topic}`);
-    lines.push(`G (Goals for this session): ${d.goals}`);
-    lines.push(`R (Reality): ${d.reality}`);
-    lines.push(``);
-    lines.push(`O (Options brainstormed, ${d.options.length}):`);
-    d.options.forEach((o, i) => lines.push(`  ${i + 1}. ${o}`));
-    lines.push(``);
-    lines.push(`W (Will):`);
-    lines.push(`  Action: ${d.will.action}`);
-    lines.push(`  When: ${d.will.when}`);
-    if (d.will.support?.trim()) lines.push(`  Support: ${d.will.support}`);
-    lines.push(``);
-    lines.push(
-      `Save the Will (action + when) as a commitment memory with followUpInSession=next session. Briefly name the shift back to the main session's theme; do NOT call complete_session from inside the laser detour.`,
     );
     return lines.join("\n");
   }

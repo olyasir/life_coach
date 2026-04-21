@@ -22,6 +22,11 @@ import InhibitorsByDomain from "./exercises/InhibitorsByDomain";
 import PopAnswers from "./exercises/PopAnswers";
 import MilestonePlan from "./exercises/MilestonePlan";
 import ConstraintsPremortem from "./exercises/ConstraintsPremortem";
+import ChangeCycleLocator from "./exercises/ChangeCycleLocator";
+import MyCow from "./exercises/MyCow";
+import KaizenAction from "./exercises/KaizenAction";
+import IdentityBecoming from "./exercises/IdentityBecoming";
+import HabitInstaller from "./exercises/HabitInstaller";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -59,6 +64,11 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "s9_pop_answers", title: "Pop answers — fast, honest, first-thought", instructions: "4 questions. First thing that comes. Bypass the censor." },
   { id: "s10_milestone_plan", title: "Your plan — stepping stones, backward from the goal", instructions: "4-6 stepping stones between today and the goal. Each one a sub-outcome, tagged with a strength and a value." },
   { id: "s10_constraints_premortem", title: "Constraints pre-mortem (אילוצים)", instructions: "What's likely to go sideways, what handles it, what we already know how to handle." },
+  { id: "s11_change_cycle_locator", title: "Where you are on the change cycle", instructions: "Experience → insight → change → habit. Pick the stage you're in for this goal's work." },
+  { id: "s11_my_cow", title: "Your cow", instructions: "Name the comfortable thing keeping you stuck — and what you're willing to do to release her." },
+  { id: "s11_kaizen_action", title: "Kaizen — embarrassingly small step", instructions: "Pick one of Maurer's six principles and apply it concretely. Tiny enough that the amygdala doesn't fire." },
+  { id: "s11_identity_becoming", title: "Who you're becoming", instructions: "I AM statements, anchored to one tiny win that proves them." },
+  { id: "s11_habit_installer", title: "Install the habit", instructions: "When, where, cue, duration, reward — every variable specific so structure (not willpower) carries the behavior." },
 ];
 
 function ExerciseRenderer({
@@ -278,6 +288,54 @@ function ExerciseRenderer({
           }
           restrainerProtectAgainst={
             payload.config?.restrainerProtectAgainst as string | undefined
+          }
+          onSubmit={onSubmit}
+        />
+      );
+    case "s11_change_cycle_locator":
+      return (
+        <ChangeCycleLocator
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s11_my_cow":
+      return (
+        <MyCow
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s11_kaizen_action":
+      return (
+        <KaizenAction
+          title={payload.title}
+          instructions={payload.instructions}
+          stalledStep={payload.config?.stalledStep as string | undefined}
+          topStrengths={payload.config?.topStrengths as string[] | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s11_identity_becoming":
+      return (
+        <IdentityBecoming
+          title={payload.title}
+          instructions={payload.instructions}
+          goal={payload.config?.goal as string | undefined}
+          identityShift={payload.config?.identityShift as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "s11_habit_installer":
+      return (
+        <HabitInstaller
+          title={payload.title}
+          instructions={payload.instructions}
+          actionToInstall={
+            payload.config?.actionToInstall as string | undefined
           }
           onSubmit={onSubmit}
         />

@@ -544,6 +544,120 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     );
     return lines.join("\n");
   }
+  if (
+    exerciseId === "s11_change_cycle_locator" &&
+    isObj(data) &&
+    typeof (data as any).stage === "string"
+  ) {
+    const d = data as { stage: string; why: string; toAdvance: string };
+    const lines: string[] = [];
+    lines.push(`Client located themselves on the change cycle.`);
+    lines.push(``);
+    lines.push(`STAGE: ${d.stage.toUpperCase()}`);
+    lines.push(`Why this stage: ${d.why}`);
+    lines.push(`What advancing would look like (concrete): ${d.toAdvance}`);
+    lines.push(``);
+    lines.push(
+      `Do NOT correct their self-diagnosis. Diagnostic guide: insight-stuck → cow + kaizen size-down. change-stuck → habit installer. experience-stuck → rewind to S9 inhibitor work. habit → integration / new experience. Save stage and answer as fact memory. Next: tell the cow story slowly, in chat.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s11_my_cow" &&
+    isObj(data) &&
+    typeof (data as any).cow === "string"
+  ) {
+    const d = data as { cow: string; releaseAction: string };
+    const lines: string[] = [];
+    lines.push(`Client named their cow.`);
+    lines.push(``);
+    lines.push(`MY COW: ${d.cow}`);
+    lines.push(`WILLING TO DO TO RELEASE HER: ${d.releaseAction}`);
+    lines.push(``);
+    lines.push(
+      `Reflect what the cow is PROTECTING them from facing — every cow is also a guard. Save as high-confidence realization: 'S11 cow: X. Protects from facing: Y. Releasing by: Z.' Then move to the kaizen / identity / habit menu pick (1-2, never more).`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s11_kaizen_action" &&
+    isObj(data) &&
+    typeof (data as any).principle === "string"
+  ) {
+    const d = data as {
+      principle: string;
+      whyThis: string;
+      tinyAction: string;
+      whenToDo: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client picked a kaizen principle and applied it.`);
+    lines.push(``);
+    lines.push(`PRINCIPLE: ${d.principle}`);
+    lines.push(`Why this one: ${d.whyThis}`);
+    lines.push(`Tiny action: ${d.tinyAction}`);
+    lines.push(`When: ${d.whenToDo}`);
+    lines.push(``);
+    lines.push(
+      `Pressure-test SIZE: if the action sounds ambitious, push smaller — 'how about half that?' The right size feels almost embarrassingly small. The amygdala should not fire when they imagine doing it. Save as fact memory; this likely becomes the homework + celebration ritual.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s11_identity_becoming" &&
+    isObj(data) &&
+    Array.isArray((data as any).statements)
+  ) {
+    const d = data as {
+      statements: string[];
+      proofMoment: string;
+      oldIdentity: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client wrote identity-becoming statements.`);
+    lines.push(``);
+    lines.push(`PROOF (the win that earns the statement): ${d.proofMoment}`);
+    lines.push(``);
+    lines.push(`I AM statements:`);
+    for (const s of d.statements) lines.push(`  - I am ${s}`);
+    lines.push(``);
+    lines.push(`OLD IDENTITY being released: ${d.oldIdentity}`);
+    lines.push(``);
+    lines.push(
+      `Pick the ONE statement with the most charge — read it back to them slowly. Ask: 'when you say that out loud, what shifts in your body?' Save the chosen statement + the proof moment as a high-confidence realization. This feeds S12.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s11_habit_installer" &&
+    isObj(data) &&
+    typeof (data as any).habit === "string"
+  ) {
+    const d = data as {
+      habit: string;
+      whenTime: string;
+      wherePlace: string;
+      cueAnchor: string;
+      duration: string;
+      reward: string;
+      ifThen: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client designed a habit installation.`);
+    lines.push(``);
+    lines.push(`HABIT: ${d.habit}`);
+    lines.push(`WHEN: ${d.whenTime}`);
+    lines.push(`WHERE: ${d.wherePlace}`);
+    lines.push(`CUE / ANCHOR: ${d.cueAnchor}`);
+    lines.push(`DURATION: ${d.duration}`);
+    lines.push(`REWARD: ${d.reward}`);
+    if (d.ifThen) lines.push(`IF / THEN backup: ${d.ifThen}`);
+    lines.push(``);
+    lines.push(
+      `Stress-test specificity: every variable must be specific (not 'sometime in the morning'). Stress-test duration: small enough to never miss? If they balk, shrink it. Read back as one sentence so they hear it. Save as fact + commitment memory with followUpInSession=12.`,
+    );
+    return lines.join("\n");
+  }
   if (exerciseId === "s6_values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

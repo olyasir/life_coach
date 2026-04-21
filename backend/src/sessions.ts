@@ -114,20 +114,32 @@ export const SESSIONS: SessionDefinition[] = [
   },
   {
     number: 4,
-    title: "Dream",
+    title: "Dream — from here to where?",
     objective:
-      "Open the aperture. Let the client imagine a life without constraints before we narrow to a goal.",
+      "Help the client create their dream — articulated in their own words, as vivid and detailed as possible. The inner critic and the inner realist are OFF this session. We open the aperture before any narrowing happens in later sessions.",
     approach:
-      "Future-self visualization: 5 years out, everything worked. What does a Tuesday look like? Who are they with? What are they proud of? Resist any move toward realism or planning yet.",
-    toolkit: ["visualization", "future_self", "miracle_question"],
-    completionCriteria: [
-      "Client has articulated a vivid future-self image",
-      "Client has identified what matters most in that image",
-      "Homework assigned as a commitment memory with followUpInSession=5",
+      "Open warmly and briefly follow up on S3's homework (1-2 turns). Save anything meaningful as a memory. Then frame S4 in ONE short turn: 'today is about your dream — and before we can write it, we need to wake up the part of you that knows how to dream. No filters, no realism, no shoulds. Ready?' Then render the dream_archaeology exercise early. This is a playful warm-up questionnaire (silly things to try, useless things to own, places to visit, childhood things you miss, etc.) designed to bypass the inner censor. Tell the client to answer quickly without overthinking — first thing that comes to mind. Once they submit, read their answers: look for PATTERNS — do their 'silly things to try' and 'childhood loves' and 'illogical professions' share a texture? A theme of adventure? Of creativity? Of being seen? Of stillness? Reflect back 1-2 patterns you noticed, one at a time, and ask what they notice. Spend 2-4 turns here — this is priming, not the main event. Then render dream_canvas: a larger exercise where the client writes their dream freely, plus the doing / having / being triad. CRITICAL: the client MUST write their own dream — never paraphrase or write it for them. If they're stuck, offer ONE prompting question at a time ('what does a Tuesday morning look like in that life?' / 'who's with you?' / 'what's the first sound you hear when you wake up?'), then wait for them to keep writing. Don't rush them. When they submit, your job is to go DEEPER into their dream, not to refine or critique it. Work this inquiry arc, ONE question at a time, never chain: (1) What part of this image is most alive for you? What pulls on you the hardest? (2) What surprises you in what you wrote? (3) Any resistance come up while writing — a voice saying 'that's not realistic' or 'I don't deserve that'? Notice it without arguing. (4) Of the DOING / HAVING / BEING — which felt easiest to write, which felt hardest? What does that tell you? (5) If you knew for certain this dream could come true, how would you feel right now? (6) Looking at this image, what is the dream UNDERNEATH the dream — what is it really about for you? (belonging? freedom? mastery? meaning? safety? being seen?). Resist any move toward planning, realism, or 'how would you get there'. That's S8-10's work. Stay in the imagination. Save the dream's essence (what's really underneath it) as a realization memory. Save any BEING qualities as fact memories (these become input for S5 strengths and S6 values). Co-design homework that deepens the dream rather than acts on it. Close only when criteria met AND past 45-55 minutes.",
+    toolkit: [
+      "dream_archaeology",
+      "dream_canvas",
+      "doing_having_being",
+      "sensory_specificity",
+      "dream_underneath",
     ],
-    exercises: ["future_self_letter"],
+    completionCriteria: [
+      "S3 homework briefly followed up (anything meaningful saved as memory)",
+      "dream_archaeology completed and at least 1-2 patterns reflected back to the client",
+      "dream_canvas rendered and client WROTE their own dream with a meaningful description + all three of doing / having / being filled",
+      "At least 3 of the dream-deepening questions worked through",
+      "Client has named what is most ALIVE in the image for them",
+      "Client has named the 'dream underneath the dream' (belonging / freedom / mastery / meaning / safety / being seen / etc.) — saved as realization memory",
+      "At least one BEING quality saved as fact memory (feeds S5 strengths and S6 values)",
+      "Homework co-designed and saved as commitment memory with followUpInSession=5",
+      "Session has run at least 45-55 minutes before close",
+    ],
+    exercises: ["dream_archaeology", "dream_canvas"],
     homeworkGuidance:
-      "Stage: expanding the imagination, before any narrowing. Homework should deepen the future-self image — NOT start acting on it. Tune to what the client's dream was about (a place, a role, a relationship, a feeling of freedom). Prefer sensory/specific prompts over abstract ones: Tuesday morning details, not life-philosophy. Guard against premature realism.",
+      "Stage: expanding the imagination — NOT acting on it. Homework should deepen the dream in sensory, specific ways without moving toward realism. Tune to what was alive for the client. Example shapes: (A) sensory specifics — 'for the next week, when you have a quiet moment, picture one specific scene from your dream life in detail: Tuesday morning at 7am in that life — what do you see / hear / smell / taste?' (B) BEING practice — take the BEING quality they named (e.g. 'being someone who creates') and find ONE 15-minute window this week to inhabit it in small form. (C) collect-evidence — a Pinterest board, a playlist, a notebook page of images/phrases that belong to their dream. Avoid any homework that looks like a plan or a goal; that's S8-10's work.",
   },
   {
     number: 5,

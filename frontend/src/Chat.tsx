@@ -5,6 +5,8 @@ import Scale from "./exercises/Scale";
 import CardSort from "./exercises/CardSort";
 import IntakeForm from "./exercises/IntakeForm";
 import LifeTimeline from "./exercises/LifeTimeline";
+import DreamArchaeology from "./exercises/DreamArchaeology";
+import DreamCanvas from "./exercises/DreamCanvas";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -50,6 +52,22 @@ function ExerciseRenderer({
           title={payload.title}
           instructions={payload.instructions}
           clientAge={payload.config?.clientAge as number | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "dream_archaeology":
+      return (
+        <DreamArchaeology
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "dream_canvas":
+      return (
+        <DreamCanvas
+          title={payload.title}
+          instructions={payload.instructions}
           onSubmit={onSubmit}
         />
       );

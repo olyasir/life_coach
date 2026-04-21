@@ -99,6 +99,8 @@ const TOOLS: Anthropic.Tool[] = [
             "strengths_inventory",
             "values_bank",
             "values_assessment",
+            "six_needs_reflection",
+            "yes_i_can",
             "needs_scale",
             "goal_canvas",
             "force_field",

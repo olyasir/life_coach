@@ -11,6 +11,8 @@ import AssetsBank from "./exercises/AssetsBank";
 import StrengthsInventory from "./exercises/StrengthsInventory";
 import ValuesBank from "./exercises/ValuesBank";
 import ValuesAssessment from "./exercises/ValuesAssessment";
+import SixNeedsReflection from "./exercises/SixNeedsReflection";
+import YesICan from "./exercises/YesICan";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -35,6 +37,8 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
   { id: "values_bank", title: "Values bank", instructions: "Tap every value that resonates. Go broad." },
   { id: "values_assessment", title: "Top 5 values — what they mean and how you live them", instructions: "For each of your top 5 values: what it means to you, how expressed 1-10, one action to live it more." },
+  { id: "six_needs_reflection", title: "Six universal needs", instructions: "Robbins-Madanes needs. For each: how it shows up in you, importance + fulfillment 1-10." },
+  { id: "yes_i_can", title: "Yes I can — the picture so far", instructions: "Everything we've named together (preview is empty — real view filled from memory in S7)." },
 ];
 
 function ExerciseRenderer({
@@ -116,6 +120,34 @@ function ExerciseRenderer({
         <ValuesAssessment
           title={payload.title}
           instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "six_needs_reflection":
+      return (
+        <SixNeedsReflection
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "yes_i_can":
+      return (
+        <YesICan
+          title={payload.title}
+          instructions={payload.instructions}
+          assets={payload.config?.assets as string[] | undefined}
+          strengths={payload.config?.strengths as string[] | undefined}
+          values={
+            payload.config?.values as
+              | Array<{ name: string; meaning?: string }>
+              | undefined
+          }
+          needs={
+            payload.config?.needs as
+              | Array<{ name: string; gap: number }>
+              | undefined
+          }
           onSubmit={onSubmit}
         />
       );

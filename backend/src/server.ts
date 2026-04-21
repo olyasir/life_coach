@@ -224,6 +224,37 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     const picks = (data as { selected: string[] }).selected;
     return `Client selected ${picks.length} values from the bank:\n${picks.map((p) => `- ${p}`).join("\n")}`;
   }
+  if (exerciseId === "six_needs_reflection" && isObj(data) && Array.isArray((data as any).needs)) {
+    const d = data as {
+      needs: Array<{ name: string; manifestation: string; importance: number; fulfillment: number }>;
+      mostImportant: string;
+      leastImportant: string;
+      learning?: string;
+    };
+    const withGap = d.needs.map((n) => ({ ...n, gap: n.importance - n.fulfillment }));
+    const sortedByGap = [...withGap].sort((a, b) => b.gap - a.gap || b.importance - a.importance);
+    const lines: string[] = [];
+    lines.push(`Client completed the Robbins-Madanes six universal needs reflection.`);
+    lines.push(``);
+    lines.push(`How each need shows up in their life:`);
+    for (const n of d.needs) {
+      lines.push(`- ${n.name} (importance ${n.importance}/10, fulfilled ${n.fulfillment}/10, gap ${n.importance - n.fulfillment}):`);
+      lines.push(`    ${n.manifestation}`);
+    }
+    lines.push(``);
+    lines.push(`Most important to client: ${d.mostImportant}`);
+    lines.push(`Least important to client: ${d.leastImportant}`);
+    if (d.learning) lines.push(`Client's own learning: ${d.learning}`);
+    lines.push(``);
+    lines.push(`Needs sorted by gap (largest first — biggest gap is priority for homework):`);
+    for (const n of sortedByGap) {
+      lines.push(`- ${n.name}: gap ${n.gap} (imp ${n.importance}, got ${n.fulfillment})`);
+    }
+    return lines.join("\n");
+  }
+  if (exerciseId === "yes_i_can") {
+    return `Client acknowledged the Yes-I-Can integrating summary. Ask the landing question: "seeing all of this together — what do you notice?" Save their response as a realization memory.`;
+  }
   if (exerciseId === "values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

@@ -163,36 +163,38 @@ export default function AssetsBank({ title, instructions, onSubmit }: Props) {
     <div className="exercise-card">
       <h3>{title}</h3>
       <p className="instructions">{instructions}</p>
-      <p style={{ color: "#888", fontSize: 13, margin: "4px 0 12px" }}>
-        Tap everything that applies to you. Go broader than you'd instinctively
-        allow — assets include inner qualities, relationships, experience, body
-        & senses, external resources. Most people underestimate themselves here.
+      <p style={{ color: "#888", fontSize: 13, margin: "4px 0 10px" }}>
+        Tap everything that applies to you. Assets include inner qualities,
+        relationships, experience, body & senses, external resources. Most
+        people underestimate themselves here.
       </p>
 
       <div
         style={{
-          position: "sticky",
-          top: 0,
-          background: "#faf8f1",
-          padding: "6px 0",
-          zIndex: 1,
-          fontSize: 13,
-          color: "#2a5d4e",
+          background: "#2a5d4e",
+          color: "white",
+          padding: "10px 14px",
+          borderRadius: 10,
+          fontSize: 14,
           fontWeight: 600,
+          marginBottom: 12,
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
         }}
       >
-        {count} / {total} selected
-        {count < minPick && (
-          <span style={{ color: "#888", fontWeight: 400, marginLeft: 8 }}>
-            (at least {minPick} to share)
-          </span>
-        )}
+        <span>
+          {count} selected <span style={{ opacity: 0.6 }}>/ {total} items</span>
+        </span>
+        <span style={{ fontSize: 12, opacity: 0.8, fontWeight: 500 }}>
+          {CATEGORIES.length} sections · scroll through all
+        </span>
       </div>
 
       <div
-        style={{ display: "flex", flexDirection: "column", gap: 14, marginTop: 8 }}
+        style={{ display: "flex", flexDirection: "column", gap: 18, marginTop: 8 }}
       >
-        {CATEGORIES.map((cat) => (
+        {CATEGORIES.map((cat, idx) => (
           <div key={cat.label}>
             <div
               style={{
@@ -202,9 +204,16 @@ export default function AssetsBank({ title, instructions, onSubmit }: Props) {
                 letterSpacing: 0.5,
                 textTransform: "uppercase",
                 marginBottom: 6,
+                display: "flex",
+                justifyContent: "space-between",
               }}
             >
-              {cat.label}
+              <span>
+                {idx + 1} / {CATEGORIES.length} · {cat.label}
+              </span>
+              <span style={{ color: "#999", fontWeight: 500 }}>
+                {cat.items.length} items
+              </span>
             </div>
             <div
               style={{
@@ -236,6 +245,19 @@ export default function AssetsBank({ title, instructions, onSubmit }: Props) {
                   </button>
                 );
               })}
+              {idx < CATEGORIES.length - 1 && (
+                <div
+                  style={{
+                    width: "100%",
+                    textAlign: "center",
+                    color: "#bbb",
+                    fontSize: 11,
+                    marginTop: 4,
+                  }}
+                >
+                  ↓ more below
+                </div>
+              )}
             </div>
           </div>
         ))}

@@ -658,6 +658,73 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     );
     return lines.join("\n");
   }
+  if (
+    exerciseId === "s12_journey_reflection" &&
+    isObj(data) &&
+    typeof (data as any).treasuresFound === "string"
+  ) {
+    const d = data as {
+      treasuresFound: string;
+      placesReached: string;
+      difficulties: string;
+      significantPeople: string;
+      placesWantedNext: string;
+      feelingAtEnd: string;
+      letterToSession1Self: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client completed the S12 journey reflection canvas.`);
+    lines.push(``);
+    lines.push(`TREASURES FOUND IN MYSELF:`);
+    lines.push(`  ${d.treasuresFound}`);
+    lines.push(``);
+    lines.push(`WONDERFUL PLACES REACHED:`);
+    lines.push(`  ${d.placesReached}`);
+    lines.push(``);
+    lines.push(`DIFFICULTIES ALONG THE WAY:`);
+    lines.push(`  ${d.difficulties}`);
+    lines.push(``);
+    lines.push(`SIGNIFICANT PEOPLE MET ON THE JOURNEY:`);
+    lines.push(`  ${d.significantPeople}`);
+    lines.push(``);
+    lines.push(`PLACES STILL WANTED (journey continues):`);
+    lines.push(`  ${d.placesWantedNext}`);
+    lines.push(``);
+    lines.push(`FEELING AT END OF JOURNEY:`);
+    lines.push(`  ${d.feelingAtEnd}`);
+    lines.push(``);
+    lines.push(`ONE THING TO TELL SESSION-1 SELF:`);
+    lines.push(`  ${d.letterToSession1Self}`);
+    lines.push(``);
+    lines.push(
+      `Do NOT narrate this back. Ask ONE question: 'which of these sections surprised you as you wrote it?' Let silence follow. The answer is often the real insight of the session — save as high-confidence realization memory. Then move to the letter to future self.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "s12_letter_to_future_self" &&
+    isObj(data) &&
+    typeof (data as any).body === "string"
+  ) {
+    const d = data as {
+      dateOneYearForward: string;
+      greeting: string;
+      body: string;
+    };
+    const lines: string[] = [];
+    lines.push(`Client wrote their letter to self, +1 year, in as-if tense.`);
+    lines.push(``);
+    lines.push(`DATE: ${d.dateOneYearForward}`);
+    lines.push(`GREETING: ${d.greeting}`);
+    lines.push(``);
+    lines.push(`LETTER (verbatim — preserve whole):`);
+    lines.push(d.body);
+    lines.push(``);
+    lines.push(
+      `Do NOT read it back. Do NOT interpret. Ask ONE question: 'what did it feel like to write in the as-if voice?' Then silence. Save the letter VERBATIM as a high-confidence realization memory — this is the single piece most clients reread. Then move to building the self-coaching toolkit in chat (3-5 questions/practices the client will carry forward), then the explicit goodbye. No homework.`,
+    );
+    return lines.join("\n");
+  }
   if (exerciseId === "s6_values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;

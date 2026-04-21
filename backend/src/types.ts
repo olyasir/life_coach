@@ -46,12 +46,23 @@ export interface SessionReflection {
   createdAt: string;
 }
 
+export interface SessionBrief {
+  openingMove: string;
+  personalAdjustments: string[];
+  watchFor: string[];
+  callBacks: string[];
+  exerciseConfigHints: string;
+  coreIssueFrame?: string;
+  createdAt: string;
+}
+
 export interface SessionRecord {
   sessionNumber: number;
   startedAt: string;
   completedAt?: string;
   summary?: string;
   reflection?: SessionReflection;
+  preSessionBrief?: SessionBrief;
   turns: ChatTurn[];
 }
 

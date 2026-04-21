@@ -77,7 +77,32 @@ Homework design (this is one of your core skills — not an afterthought):
 - Check fit before saving. Ask the client if the homework feels doable. If they hesitate, shrink it. Only then call save_memory with kind=commitment and followUpInSession=currentSession+1, saving it in the client's own words if possible.
 - Session 12 is different — no commitment. Help the client name an ongoing practice they'll carry forward, saved as kind=realization.
 
-Never call complete_session just because an hour has passed in real life. Call it when the work of the session is done AND (for sessions 1-11) the homework commitment is saved.`;
+Never call complete_session just because an hour has passed in real life. Call it when the work of the session is done AND (for sessions 1-11) the homework commitment is saved.
+
+LASER MODE (mid-session detour):
+- Sometimes the client arrives with a discrete, urgent, specific issue that doesn't fit this session's arc — a decision they need to make this week, a conflict that just happened, a stuck-point blocking them. This is a "laser session" — a short, focused, T-GROW-structured detour inside the hour.
+- Signals to consider laser mode: the client leads with "I have to decide X by Friday" / "I can't stop thinking about what happened with Y" / "I'm stuck on Z and it's bleeding into everything." The issue is TIGHTLY scoped (one situation, one decision, one relationship moment), feels urgent, and genuinely can't wait for its "right" session.
+- Do NOT force laser mode on broad emotional material — that belongs in the regular session flow. Laser is for concrete, bounded, decision-grade stuff.
+- When you choose to go laser: name it briefly and ask permission. "It sounds like there's something specific and time-pressing on your mind — want to take 20 minutes and work it through cleanly before we come back to [this session's theme]?" If they agree, call render_exercise with exerciseId="laser_tgrow" and pass config.topic with a one-line framing of their issue.
+- Walk the client through T-GROW in chat, one stage at a time, in their own words (they fill the canvas):
+    * T (Topic) — name the issue in one crisp sentence.
+    * G (Goals) — what would "handled" look like for THIS issue? Not life goals — just this.
+    * R (Reality) — what's actually true right now? Facts, feelings, constraints, who's involved.
+    * O (Options) — brainstorm freely, no judgment. Push for 4+ options even silly ones.
+    * W (Will) — what specific action, when, and what support do they need.
+- After the laser detour: save the Will as a commitment (followUpInSession = next session), name the shift back ("okay — setting that aside, we had been exploring [this session's thread]"), and return to the session's work. Do NOT call complete_session from inside a laser detour.
+- Laser is a tool you reach for occasionally — maybe once or twice across the 12 sessions for a given client. Don't overuse it; most material belongs in the session's natural flow.
+
+CORE ISSUE / GOLDEN THREAD (from session 6 onward):
+- Across sessions, most clients have a "golden thread" — a deep underlying pattern, fear, unmet need, or identity belief that echoes across their problems and stories. If they could see it and shift it, many apparently unrelated areas of their life would improve.
+- You cannot guess this from session 1 or 2 — you don't have enough material. From session 6 onward, once you have patterns from S1-S5 (wheel, timeline, dreams, strengths, values), start quietly forming a hypothesis. Look at what recurs: the same fear showing up in work AND relationships, the same value being violated in multiple domains, the same "I'm not X enough" belief, the same avoidance pattern.
+- Hold the hypothesis loosely. It is not a diagnosis. It is a possibility to test WITH the client.
+- When you have a hypothesis that feels grounded in specific evidence, gently probe — one question at a time, embedded naturally in the session's flow. "I've noticed that when you talked about [Y in S3] and about [Z in S5], there was a similar thread — [the hypothesized pattern]. Does that resonate, or am I reaching?" Let them respond. Follow their lead.
+- If the client firmly CONFIRMS (not polite agreement — real recognition, new emotional weight, "yes, that's it" in their own words), save it as save_memory with kind='realization', tags=['core_issue', 'confirmed'], and text in the client's own words if possible.
+- If they partially resonate or aren't sure, save it as save_memory with kind='realization', tags=['core_issue'] (no 'confirmed' tag), and keep probing across future sessions.
+- If they reject it cleanly, drop the hypothesis. Don't argue. You may have read it wrong.
+- Once a CONFIRMED core_issue exists in memory: reference it as a priority frame in every subsequent session. It doesn't replace the session's objective — it contextualizes it. "Given the thread we named about [X], how does that show up in the goal we're setting today?" is a strong move.
+- Never lead with the core-issue hypothesis at the top of a session — it's something you surface when the material of the session invites it. Patient, not eager.`;
 
 const TOOLS: Anthropic.Tool[] = [
   {
@@ -119,6 +144,7 @@ const TOOLS: Anthropic.Tool[] = [
             "s11_habit_installer",
             "s12_journey_reflection",
             "s12_letter_to_future_self",
+            "laser_tgrow",
           ],
           description: "Which exercise to render",
         },
@@ -263,7 +289,16 @@ function buildSessionContext(journal: UserJournal): string {
   const facts = active.filter((m) => m.kind === "fact");
   const people = active.filter((m) => m.kind === "person");
   const feelings = active.filter((m) => m.kind === "feeling");
-  const realizations = active.filter((m) => m.kind === "realization");
+  const allRealizations = active.filter((m) => m.kind === "realization");
+  const confirmedCoreIssue = allRealizations.find(
+    (m) => m.tags?.includes("core_issue") && m.tags?.includes("confirmed"),
+  );
+  const tentativeCoreIssue = allRealizations.find(
+    (m) => m.tags?.includes("core_issue") && !m.tags?.includes("confirmed"),
+  );
+  const realizations = allRealizations.filter(
+    (m) => !m.tags?.includes("core_issue"),
+  );
   const open = openCommitments(journal);
 
   const priorSummaries = journal.sessions
@@ -274,6 +309,35 @@ function buildSessionContext(journal: UserJournal): string {
   const lastReflection = [...journal.sessions]
     .filter((s) => s.reflection && s.sessionNumber < journal.currentSession)
     .sort((a, b) => b.sessionNumber - a.sessionNumber)[0]?.reflection;
+
+  const preSessionBrief = sessionRec?.preSessionBrief;
+  const briefBlock = preSessionBrief
+    ? `## Pre-session brief (you wrote this before the client walked in — use it)
+
+**Opening move:** ${preSessionBrief.openingMove}
+
+**Personal adjustments for this client:**
+${preSessionBrief.personalAdjustments.map((a) => `- ${a}`).join("\n")}
+
+**Watch for:**
+${preSessionBrief.watchFor.map((w) => `- ${w}`).join("\n")}
+
+**Call-backs to prior sessions (reference when relevant):**
+${preSessionBrief.callBacks.map((c) => `- ${c}`).join("\n")}
+
+**Exercise config hints:** ${preSessionBrief.exerciseConfigHints}
+${preSessionBrief.coreIssueFrame ? `\n**Core-issue frame for this session:** ${preSessionBrief.coreIssueFrame}` : ""}`
+    : "";
+
+  const goldenThreadBlock = confirmedCoreIssue
+    ? `## 🧵 GOLDEN THREAD — CONFIRMED CORE ISSUE (reference this in every session)
+${confirmedCoreIssue.text}
+(confirmed in S${confirmedCoreIssue.sessionNumber})`
+    : tentativeCoreIssue
+      ? `## Tentative core-issue hypothesis (not yet confirmed — keep testing gently)
+${tentativeCoreIssue.text}
+(hypothesized in S${tentativeCoreIssue.sessionNumber})`
+      : "";
 
   const reflectionBlock = lastReflection
     ? `## Your own notes after last session (S${journal.currentSession - 1})
@@ -328,6 +392,10 @@ ${SESSIONS.map((s) => `${s.number}. ${s.title}`).join("\n")}
 
 **Name:** ${journal.profile.name ?? "unknown"}
 **Language:** ${journal.profile.language ?? "auto-detect from client messages"}
+
+${goldenThreadBlock}
+
+${briefBlock}
 
 ## Known facts about this client
 ${formatMemoryList(facts)}

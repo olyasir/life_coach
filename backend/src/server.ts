@@ -4,10 +4,12 @@ import { fileURLToPath } from "node:url";
 import cors from "cors";
 import express from "express";
 import { reflectOnSession, runCoachTurn } from "./coach.js";
+import { generatePreSessionBrief } from "./preSessionBrief.js";
 import {
   advanceToNextSession,
   appendExercise,
   appendMemory,
+  attachPreSessionBrief,
   attachReflection,
   completeCurrentSession,
   currentSessionRecord,
@@ -73,6 +75,19 @@ app.post("/api/message/:userId", async (req, res) => {
 
   const journal = await loadJournal(req.params.userId);
   const sessionRec = currentSessionRecord(journal);
+
+  if (
+    sessionRec.turns.length === 0 &&
+    journal.currentSession > 1 &&
+    !sessionRec.preSessionBrief
+  ) {
+    try {
+      const brief = await generatePreSessionBrief(journal);
+      if (brief) attachPreSessionBrief(sessionRec, brief);
+    } catch (err) {
+      console.error("pre-session brief failed", err);
+    }
+  }
 
   const userTurn: ChatTurn = {
     role: "user",
@@ -722,6 +737,38 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     lines.push(``);
     lines.push(
       `Do NOT read it back. Do NOT interpret. Ask ONE question: 'what did it feel like to write in the as-if voice?' Then silence. Save the letter VERBATIM as a high-confidence realization memory — this is the single piece most clients reread. Then move to building the self-coaching toolkit in chat (3-5 questions/practices the client will carry forward), then the explicit goodbye. No homework.`,
+    );
+    return lines.join("\n");
+  }
+  if (
+    exerciseId === "laser_tgrow" &&
+    isObj(data) &&
+    typeof (data as any).topic === "string"
+  ) {
+    const d = data as {
+      topic: string;
+      goals: string;
+      reality: string;
+      options: string[];
+      will: { action: string; when: string; support: string };
+    };
+    const lines: string[] = [];
+    lines.push(`Client completed a LASER T-GROW detour.`);
+    lines.push(``);
+    lines.push(`T (Topic): ${d.topic}`);
+    lines.push(`G (Goals for this session): ${d.goals}`);
+    lines.push(`R (Reality): ${d.reality}`);
+    lines.push(``);
+    lines.push(`O (Options brainstormed, ${d.options.length}):`);
+    d.options.forEach((o, i) => lines.push(`  ${i + 1}. ${o}`));
+    lines.push(``);
+    lines.push(`W (Will):`);
+    lines.push(`  Action: ${d.will.action}`);
+    lines.push(`  When: ${d.will.when}`);
+    if (d.will.support?.trim()) lines.push(`  Support: ${d.will.support}`);
+    lines.push(``);
+    lines.push(
+      `Save the Will (action + when) as a commitment memory with followUpInSession=next session. Briefly name the shift back to the main session's theme; do NOT call complete_session from inside the laser detour.`,
     );
     return lines.join("\n");
   }

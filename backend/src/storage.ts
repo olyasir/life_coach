@@ -6,6 +6,7 @@ import type {
   ExerciseResult,
   Memory,
   MemoryKind,
+  SessionBrief,
   SessionRecord,
   SessionReflection,
   UserJournal,
@@ -178,4 +179,11 @@ export function attachReflection(
   reflection: SessionReflection,
 ): void {
   rec.reflection = reflection;
+}
+
+export function attachPreSessionBrief(
+  rec: SessionRecord,
+  brief: SessionBrief,
+): void {
+  rec.preSessionBrief = brief;
 }

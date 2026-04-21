@@ -29,6 +29,7 @@ import IdentityBecoming from "./exercises/IdentityBecoming";
 import HabitInstaller from "./exercises/HabitInstaller";
 import JourneyReflection from "./exercises/JourneyReflection";
 import LetterToFutureSelf from "./exercises/LetterToFutureSelf";
+import LaserTGrow from "./exercises/LaserTGrow";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -73,6 +74,7 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "s11_habit_installer", title: "Install the habit", instructions: "When, where, cue, duration, reward — every variable specific so structure (not willpower) carries the behavior." },
   { id: "s12_journey_reflection", title: "The journey — looking back", instructions: "Seven sections: treasures, places reached, difficulties, people, places still wanted, feeling at the end, one thing to your session-1 self." },
   { id: "s12_letter_to_future_self", title: "Letter to myself, one year from today", instructions: "Write as if everything you want has already come to be. Present tense. Not hope — arrival." },
+  { id: "laser_tgrow", title: "Laser session — T-GROW", instructions: "A focused detour: Topic, Goals, Reality, Options, Will. One issue, worked cleanly." },
 ];
 
 function ExerciseRenderer({
@@ -369,6 +371,15 @@ function ExerciseRenderer({
           instructions={payload.instructions}
           goal={payload.config?.goal as string | undefined}
           targetDate={payload.config?.targetDate as string | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "laser_tgrow":
+      return (
+        <LaserTGrow
+          title={payload.title}
+          instructions={payload.instructions}
+          topic={payload.config?.topic as string | undefined}
           onSubmit={onSubmit}
         />
       );

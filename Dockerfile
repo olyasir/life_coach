@@ -17,6 +17,5 @@ COPY --from=build /app/backend/dist ./backend/dist
 COPY --from=build /app/frontend/dist ./frontend/dist
 ENV NODE_ENV=production
 ENV DATA_DIR=/data
-VOLUME ["/data"]
 EXPOSE 3001
 CMD ["node", "backend/dist/server.js"]

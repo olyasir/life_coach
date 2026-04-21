@@ -407,7 +407,7 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
       }>;
     };
     const lines: string[] = [];
-    lines.push(`Client completed the Reuven Katz inhibitors bank.`);
+    lines.push(`Client completed the 26-item inhibitors bank.`);
     lines.push(``);
     lines.push(`All picked (${d.picked.length}): ${d.picked.join(", ")}`);
     lines.push(``);
@@ -592,7 +592,7 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
       foldInto: string;
     };
     const lines: string[] = [];
-    lines.push(`Client completed the constraints pre-mortem (Yozmot אילוצים).`);
+    lines.push(`Client completed the constraints pre-mortem (אילוצים).`);
     lines.push(``);
     for (const r of d.rows) {
       const tag = r.isTopRestrainer ? " [S9 top restrainer]" : "";

@@ -48,7 +48,7 @@ const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string
   { id: "s8_goal_canvas", title: "Your goal — in your own hand", instructions: "The goal statement, the value it honors, the need it meets, target date, passion, price, and the three quality tests." },
   { id: "s8_ten_reasons", title: "Ten reasons why I want this goal", instructions: "The first three are easy. The middle four make you think. The last three are the real ones." },
   { id: "s9_force_field", title: "The field around your goal", instructions: "What's already pulling you toward it, what's holding you back, and what wants to be expressed." },
-  { id: "s9_inhibitors_bank", title: "Katz inhibitors bank", instructions: "26 common inhibitors. Pick what echoes. Rank top 5. 3 questions on each of the 5." },
+  { id: "s9_inhibitors_bank", title: "Inhibitors bank", instructions: "26 common inhibitors. Pick what echoes. Rank top 5. 3 questions on each of the 5." },
   { id: "s9_imps_taming", title: "Name your imps", instructions: "Small internal voices. Name them, trigger, how to tame. 1-3 is usually right." },
   { id: "s9_inner_judge", title: "The inner judge", instructions: "Catch the critic voice on the page. 4+ statements. Mark the 2 loudest." },
   { id: "s9_fairy_letter", title: "Letter from the fairy self", instructions: "A short letter from the wisest, kindest you — to the you sitting here now." },

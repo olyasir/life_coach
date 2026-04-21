@@ -200,11 +200,11 @@ Read their responses carefully. Pick the one answer that feels most alive, revea
 });
 
 function formatExerciseResults(exerciseId: string, data: unknown): string {
-  if (exerciseId === "assets_bank" && isObj(data) && Array.isArray((data as any).selected)) {
+  if (exerciseId === "s5_assets_bank" && isObj(data) && Array.isArray((data as any).selected)) {
     const picks = (data as { selected: string[] }).selected;
     return `Client selected ${picks.length} assets/strengths from the bank:\n${picks.map((p) => `- ${p}`).join("\n")}`;
   }
-  if (exerciseId === "strengths_inventory" && isObj(data) && isObj((data as any).scores)) {
+  if (exerciseId === "s5_strengths_inventory" && isObj(data) && isObj((data as any).scores)) {
     const scores = (data as { scores: Record<string, number> }).scores;
     const entries = Object.entries(scores).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     const byBand = (n: number) => entries.filter(([, v]) => v === n).map(([k]) => k);
@@ -220,11 +220,11 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     if (one.length) lines.push(`Score 1 (barely): ${one.join(", ")}`);
     return lines.join("\n");
   }
-  if (exerciseId === "values_bank" && isObj(data) && Array.isArray((data as any).selected)) {
+  if (exerciseId === "s6_values_bank" && isObj(data) && Array.isArray((data as any).selected)) {
     const picks = (data as { selected: string[] }).selected;
     return `Client selected ${picks.length} values from the bank:\n${picks.map((p) => `- ${p}`).join("\n")}`;
   }
-  if (exerciseId === "six_needs_reflection" && isObj(data) && Array.isArray((data as any).needs)) {
+  if (exerciseId === "s7_six_needs_reflection" && isObj(data) && Array.isArray((data as any).needs)) {
     const d = data as {
       needs: Array<{ name: string; manifestation: string; importance: number; fulfillment: number }>;
       mostImportant: string;
@@ -252,10 +252,10 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     }
     return lines.join("\n");
   }
-  if (exerciseId === "yes_i_can") {
+  if (exerciseId === "s7_yes_i_can") {
     return `Client acknowledged the Yes-I-Can integrating summary. Ask the landing question: "seeing all of this together — what do you notice?" Save their response as a realization memory.`;
   }
-  if (exerciseId === "goal_canvas" && isObj(data)) {
+  if (exerciseId === "s8_goal_canvas" && isObj(data)) {
     const d = data as {
       goalStatement: string;
       valueHonored: string;
@@ -285,10 +285,10 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     lines.push(`- ECOLOGICAL (others affected): ${d.ecologicalTest.confirmed ? "✓" : "✗"} — ${d.ecologicalTest.note}`);
     lines.push(`- REALITY (resources): ${d.realityTest.confirmed ? "✓" : "✗"} — ${d.realityTest.note}`);
     lines.push(``);
-    lines.push(`Save the final goal statement as a HIGH-CONFIDENCE fact memory. Then move into the ten_reasons exercise.`);
+    lines.push(`Save the final goal statement as a HIGH-CONFIDENCE fact memory. Then move into the s8_ten_reasons exercise.`);
     return lines.join("\n");
   }
-  if (exerciseId === "ten_reasons" && isObj(data) && Array.isArray((data as any).reasons)) {
+  if (exerciseId === "s8_ten_reasons" && isObj(data) && Array.isArray((data as any).reasons)) {
     const d = data as { goal: string; reasons: string[] };
     const lines: string[] = [];
     lines.push(`Client completed the TEN REASONS exercise.`);
@@ -303,7 +303,7 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     lines.push(`Read them carefully. Reflect back the PATTERN/theme across the ten (not a read-back). Then ask which reason has the most CHARGE — the one they'd put on their wall. Save that as a realization memory.`);
     return lines.join("\n");
   }
-  if (exerciseId === "values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
+  if (exerciseId === "s6_values_assessment" && isObj(data) && Array.isArray((data as any).values)) {
     const values = (data as {
       values: Array<{ name: string; meaning: string; currentExpression: number; action: string }>;
     }).values;

@@ -1,8 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getJournal, gotoSession, resetJournal, sendMessage, submitExercise } from "./api";
 import WheelOfLife from "./exercises/WheelOfLife";
-import Scale from "./exercises/Scale";
-import CardSort from "./exercises/CardSort";
 import IntakeForm from "./exercises/IntakeForm";
 import LifeTimeline from "./exercises/LifeTimeline";
 import DreamArchaeology from "./exercises/DreamArchaeology";
@@ -30,19 +28,19 @@ function getOrCreateUserId(): string {
 const USER_ID = getOrCreateUserId();
 
 const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string }> = [
-  { id: "intake_form", title: "Intake — who you are", instructions: "A few questions to start. Take your time." },
-  { id: "wheel_of_life", title: "Wheel of life", instructions: "Score each domain 1-10 as it feels RIGHT NOW." },
-  { id: "life_timeline", title: "Life timeline", instructions: "Title each 5-year chapter you've lived, and grade it." },
-  { id: "dream_archaeology", title: "Dream archaeology — warm-up", instructions: "Answer quickly, don't overthink. First thing that comes." },
-  { id: "dream_canvas", title: "Your dream", instructions: "Write your dream freely, then the doing / having / being triad." },
-  { id: "assets_bank", title: "Assets & strengths bank", instructions: "Tap everything that applies to you. Go broad." },
-  { id: "strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
-  { id: "values_bank", title: "Values bank", instructions: "Tap every value that resonates. Go broad." },
-  { id: "values_assessment", title: "Top 5 values — what they mean and how you live them", instructions: "For each of your top 5 values: what it means to you, how expressed 1-10, one action to live it more." },
-  { id: "six_needs_reflection", title: "Six universal needs", instructions: "Robbins-Madanes needs. For each: how it shows up in you, importance + fulfillment 1-10." },
-  { id: "yes_i_can", title: "Yes I can — the picture so far", instructions: "Everything we've named together (preview is empty — real view filled from memory in S7)." },
-  { id: "goal_canvas", title: "Your goal — in your own hand", instructions: "The goal statement, the value it honors, the need it meets, target date, passion, price, and the three quality tests." },
-  { id: "ten_reasons", title: "Ten reasons why I want this goal", instructions: "The first three are easy. The middle four make you think. The last three are the real ones." },
+  { id: "s1_intake_form", title: "Intake — who you are", instructions: "A few questions to start. Take your time." },
+  { id: "s2_wheel_of_life", title: "Wheel of life", instructions: "Score each domain 1-10 as it feels RIGHT NOW." },
+  { id: "s3_life_timeline", title: "Life timeline", instructions: "Title each 5-year chapter you've lived, and grade it." },
+  { id: "s4_dream_archaeology", title: "Dream archaeology — warm-up", instructions: "Answer quickly, don't overthink. First thing that comes." },
+  { id: "s4_dream_canvas", title: "Your dream", instructions: "Write your dream freely, then the doing / having / being triad." },
+  { id: "s5_assets_bank", title: "Assets & strengths bank", instructions: "Tap everything that applies to you. Go broad." },
+  { id: "s5_strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
+  { id: "s6_values_bank", title: "Values bank", instructions: "Tap every value that resonates. Go broad." },
+  { id: "s6_values_assessment", title: "Top 5 values — what they mean and how you live them", instructions: "For each of your top 5 values: what it means to you, how expressed 1-10, one action to live it more." },
+  { id: "s7_six_needs_reflection", title: "Six universal needs", instructions: "Robbins-Madanes needs. For each: how it shows up in you, importance + fulfillment 1-10." },
+  { id: "s7_yes_i_can", title: "Yes I can — the picture so far", instructions: "Everything we've named together (preview is empty — real view filled from memory in S7)." },
+  { id: "s8_goal_canvas", title: "Your goal — in your own hand", instructions: "The goal statement, the value it honors, the need it meets, target date, passion, price, and the three quality tests." },
+  { id: "s8_ten_reasons", title: "Ten reasons why I want this goal", instructions: "The first three are easy. The middle four make you think. The last three are the real ones." },
 ];
 
 function ExerciseRenderer({
@@ -53,7 +51,7 @@ function ExerciseRenderer({
   onSubmit: (data: unknown) => void;
 }) {
   switch (payload.exerciseId) {
-    case "intake_form":
+    case "s1_intake_form":
       return (
         <IntakeForm
           title={payload.title}
@@ -61,7 +59,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "wheel_of_life":
+    case "s2_wheel_of_life":
       return (
         <WheelOfLife
           title={payload.title}
@@ -70,7 +68,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "life_timeline":
+    case "s3_life_timeline":
       return (
         <LifeTimeline
           title={payload.title}
@@ -79,7 +77,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "dream_archaeology":
+    case "s4_dream_archaeology":
       return (
         <DreamArchaeology
           title={payload.title}
@@ -87,7 +85,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "dream_canvas":
+    case "s4_dream_canvas":
       return (
         <DreamCanvas
           title={payload.title}
@@ -95,7 +93,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "assets_bank":
+    case "s5_assets_bank":
       return (
         <AssetsBank
           title={payload.title}
@@ -103,7 +101,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "strengths_inventory":
+    case "s5_strengths_inventory":
       return (
         <StrengthsInventory
           title={payload.title}
@@ -111,7 +109,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "values_bank":
+    case "s6_values_bank":
       return (
         <ValuesBank
           title={payload.title}
@@ -119,7 +117,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "values_assessment":
+    case "s6_values_assessment":
       return (
         <ValuesAssessment
           title={payload.title}
@@ -127,7 +125,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "six_needs_reflection":
+    case "s7_six_needs_reflection":
       return (
         <SixNeedsReflection
           title={payload.title}
@@ -135,7 +133,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "yes_i_can":
+    case "s7_yes_i_can":
       return (
         <YesICan
           title={payload.title}
@@ -155,7 +153,7 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "goal_canvas":
+    case "s8_goal_canvas":
       return (
         <GoalCanvas
           title={payload.title}
@@ -167,32 +165,12 @@ function ExerciseRenderer({
           onSubmit={onSubmit}
         />
       );
-    case "ten_reasons":
+    case "s8_ten_reasons":
       return (
         <TenReasons
           title={payload.title}
           instructions={payload.instructions}
           goal={payload.config?.goal as string | undefined}
-          onSubmit={onSubmit}
-        />
-      );
-    case "needs_scale":
-      return (
-        <Scale
-          title={payload.title}
-          instructions={payload.instructions}
-          items={payload.config?.items as string[] | undefined}
-          onSubmit={onSubmit}
-        />
-      );
-    case "strengths_card_sort":
-    case "values_card_sort":
-      return (
-        <CardSort
-          title={payload.title}
-          instructions={payload.instructions}
-          items={payload.config?.items as string[] | undefined}
-          maxPick={(payload.config?.maxPick as number) ?? 5}
           onSubmit={onSubmit}
         />
       );
@@ -278,7 +256,7 @@ export default function Chat() {
       exerciseId: def.id,
       title: def.title,
       instructions: def.instructions,
-      config: def.id === "life_timeline" ? { clientAge: 40 } : {},
+      config: def.id === "s3_life_timeline" ? { clientAge: 40 } : {},
     };
     setMessages((m) => [
       ...m,

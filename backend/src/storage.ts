@@ -187,3 +187,46 @@ export function attachPreSessionBrief(
 ): void {
   rec.preSessionBrief = brief;
 }
+
+const SESSION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+
+export interface LockStatus {
+  locked: boolean;
+  currentSession: number;
+  unlocksAt?: string;
+  previousCompletedAt?: string;
+}
+
+export function sessionLockStatus(journal: UserJournal): LockStatus {
+  const currentSession = journal.currentSession;
+  const rec = journal.sessions.find((s) => s.sessionNumber === currentSession);
+  const currentStarted = (rec?.turns.length ?? 0) > 0;
+
+  if (process.env.DEV_DISABLE_COOLDOWN === "1") {
+    return { locked: false, currentSession };
+  }
+  if (currentSession <= 1 || currentStarted) {
+    return { locked: false, currentSession };
+  }
+  const prev = journal.sessions.find(
+    (s) => s.sessionNumber === currentSession - 1,
+  );
+  if (!prev?.completedAt) return { locked: false, currentSession };
+
+  const unlocksAt = new Date(
+    new Date(prev.completedAt).getTime() + SESSION_COOLDOWN_MS,
+  );
+  if (unlocksAt.getTime() <= Date.now()) {
+    return {
+      locked: false,
+      currentSession,
+      previousCompletedAt: prev.completedAt,
+    };
+  }
+  return {
+    locked: true,
+    currentSession,
+    unlocksAt: unlocksAt.toISOString(),
+    previousCompletedAt: prev.completedAt,
+  };
+}

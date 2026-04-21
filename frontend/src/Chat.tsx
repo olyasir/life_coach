@@ -32,17 +32,6 @@ import LetterToFutureSelf from "./exercises/LetterToFutureSelf";
 import LaserTGrow from "./exercises/LaserTGrow";
 import type { ExercisePayload, Message } from "./types";
 
-function getOrCreateUserId(): string {
-  const KEY = "coach_user_id";
-  let id = localStorage.getItem(KEY);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(KEY, id);
-  }
-  return id;
-}
-
-const USER_ID = getOrCreateUserId();
 
 const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string }> = [
   { id: "s1_intake_form", title: "Intake — who you are", instructions: "A few questions to start. Take your time." },
@@ -404,7 +393,7 @@ export default function Chat() {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    getJournal(USER_ID)
+    getJournal()
       .then((j) => setCurrentSession(j.currentSession))
       .catch(() => {});
   }, []);
@@ -425,7 +414,7 @@ export default function Chat() {
     setInput("");
 
     try {
-      const res = await sendMessage(USER_ID, text);
+      const res = await sendMessage(text);
       const newMsgs: Message[] = [];
       if (res.assistantText) {
         newMsgs.push({
@@ -487,7 +476,7 @@ export default function Chat() {
   async function onExerciseSubmit(exerciseId: string, data: unknown) {
     setSending(true);
     try {
-      const res = await submitExercise(USER_ID, exerciseId, data);
+      const res = await submitExercise(exerciseId, data);
       if (res.assistantText) {
         setMessages((m) => [
           ...m,
@@ -517,7 +506,7 @@ export default function Chat() {
             value={currentSession}
             onChange={async (e) => {
               const n = Number(e.target.value);
-              await gotoSession(USER_ID, n);
+              await gotoSession(n);
               setCurrentSession(n);
               setMessages([]);
             }}
@@ -564,7 +553,7 @@ export default function Chat() {
           <button
             onClick={async () => {
               if (!confirm("Reset everything for this user?")) return;
-              await resetJournal(USER_ID);
+              await resetJournal();
               setCurrentSession(1);
               setMessages([]);
             }}

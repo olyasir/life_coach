@@ -16,50 +16,95 @@ import {
   loadJournal,
   resolveCommitment,
   saveJournal,
+  sessionLockStatus,
 } from "./storage.js";
+import {
+  type AuthedRequest,
+  requireAuth,
+  signSessionToken,
+  verifyGoogleIdToken,
+} from "./auth.js";
 import type { ChatTurn } from "./types.js";
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
 
-app.get("/api/journal/:userId", async (req, res) => {
-  const journal = await loadJournal(req.params.userId);
+const DEBUG_ROUTES_ENABLED = process.env.DEBUG_ROUTES === "1";
+
+app.post("/api/auth/google", async (req, res) => {
+  const { idToken } = req.body ?? {};
+  if (typeof idToken !== "string" || !idToken) {
+    return res.status(400).json({ error: "idToken required" });
+  }
+  try {
+    const user = await verifyGoogleIdToken(idToken);
+    const journal = await loadJournal(user.userId);
+    if (user.name && !journal.profile.name) {
+      journal.profile.name = user.name;
+      await saveJournal(journal);
+    }
+    const token = signSessionToken(user);
+    res.json({ token, user });
+  } catch (err) {
+    console.error("google auth failed", err);
+    res.status(401).json({ error: "google auth failed" });
+  }
+});
+
+app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
+  const journal = await loadJournal(req.user!.userId);
+  res.json({
+    user: req.user,
+    journal,
+    lock: sessionLockStatus(journal),
+  });
+});
+
+app.get("/api/lock-status", requireAuth, async (req: AuthedRequest, res) => {
+  const journal = await loadJournal(req.user!.userId);
+  res.json(sessionLockStatus(journal));
+});
+
+app.get("/api/journal", requireAuth, async (req: AuthedRequest, res) => {
+  const journal = await loadJournal(req.user!.userId);
   res.json(journal);
 });
 
-app.post("/api/debug/goto/:userId", async (req, res) => {
-  const n = Number(req.body?.sessionNumber);
-  if (!Number.isInteger(n) || n < 1 || n > 12) {
-    return res.status(400).json({ error: "sessionNumber must be 1-12" });
-  }
-  const journal = await loadJournal(req.params.userId);
-  journal.currentSession = n;
-  if (!journal.sessions.find((s) => s.sessionNumber === n)) {
-    journal.sessions.push({
-      sessionNumber: n,
-      startedAt: new Date().toISOString(),
-      turns: [],
-    });
-  }
-  await saveJournal(journal);
-  res.json({ currentSession: journal.currentSession });
-});
+if (DEBUG_ROUTES_ENABLED) {
+  app.post("/api/debug/goto", requireAuth, async (req: AuthedRequest, res) => {
+    const n = Number(req.body?.sessionNumber);
+    if (!Number.isInteger(n) || n < 1 || n > 12) {
+      return res.status(400).json({ error: "sessionNumber must be 1-12" });
+    }
+    const journal = await loadJournal(req.user!.userId);
+    journal.currentSession = n;
+    if (!journal.sessions.find((s) => s.sessionNumber === n)) {
+      journal.sessions.push({
+        sessionNumber: n,
+        startedAt: new Date().toISOString(),
+        turns: [],
+      });
+    }
+    await saveJournal(journal);
+    res.json({ currentSession: journal.currentSession });
+  });
 
-app.post("/api/debug/reset/:userId", async (req, res) => {
-  const journal = await loadJournal(req.params.userId);
-  journal.currentSession = 1;
-  journal.sessions = [
-    { sessionNumber: 1, startedAt: new Date().toISOString(), turns: [] },
-  ];
-  journal.memories = [];
-  journal.exercises = [];
-  await saveJournal(journal);
-  res.json({ ok: true });
-});
+  app.post("/api/debug/reset", requireAuth, async (req: AuthedRequest, res) => {
+    const journal = await loadJournal(req.user!.userId);
+    journal.currentSession = 1;
+    journal.sessions = [
+      { sessionNumber: 1, startedAt: new Date().toISOString(), turns: [] },
+    ];
+    journal.memories = [];
+    journal.exercises = [];
+    await saveJournal(journal);
+    res.json({ ok: true });
+  });
+}
 
-app.post("/api/profile/:userId", async (req, res) => {
-  const journal = await loadJournal(req.params.userId);
+app.post("/api/profile", requireAuth, async (req: AuthedRequest, res) => {
+  const journal = await loadJournal(req.user!.userId);
   const { name, language } = req.body ?? {};
   if (typeof name === "string") journal.profile.name = name;
   if (language === "en" || language === "he") journal.profile.language = language;
@@ -67,13 +112,17 @@ app.post("/api/profile/:userId", async (req, res) => {
   res.json(journal);
 });
 
-app.post("/api/message/:userId", async (req, res) => {
+app.post("/api/message", requireAuth, async (req: AuthedRequest, res) => {
   const { text } = req.body ?? {};
   if (typeof text !== "string" || !text.trim()) {
     return res.status(400).json({ error: "text is required" });
   }
 
-  const journal = await loadJournal(req.params.userId);
+  const journal = await loadJournal(req.user!.userId);
+  const lock = sessionLockStatus(journal);
+  if (lock.locked) {
+    return res.status(423).json({ error: "session locked", lock });
+  }
   const sessionRec = currentSessionRecord(journal);
 
   if (
@@ -163,12 +212,12 @@ app.post("/api/message/:userId", async (req, res) => {
   }
 });
 
-app.post("/api/exercise/:userId", async (req, res) => {
+app.post("/api/exercise", requireAuth, async (req: AuthedRequest, res) => {
   const { exerciseId, data } = req.body ?? {};
   if (typeof exerciseId !== "string") {
     return res.status(400).json({ error: "exerciseId required" });
   }
-  const journal = await loadJournal(req.params.userId);
+  const journal = await loadJournal(req.user!.userId);
   const sessionRec = currentSessionRecord(journal);
 
   appendExercise(journal, exerciseId, data);

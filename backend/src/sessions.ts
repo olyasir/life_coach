@@ -85,20 +85,30 @@ export const SESSIONS: SessionDefinition[] = [
   },
   {
     number: 3,
-    title: "Past",
+    title: "Past as resource — life timeline",
     objective:
-      "Surface formative experiences and recurring patterns without re-traumatizing or doing therapy.",
+      "Help the client notice how they have ALREADY moved from hard to better across their life, and name the inner resource that carried them. This is NOT therapy — the focus is the climb up, not the valley.",
     approach:
-      "Life-timeline exercise: high points, low points, turning points. Ask what each taught them. Watch for recurring themes (roles they play, beliefs they carry). Stay in coaching — if trauma surfaces, name it with care and refer out if needed.",
-    toolkit: ["life_timeline", "pattern_recognition", "safety_check"],
+      "Open warmly and briefly follow up on S2's homework (1-2 turns). Save anything meaningful as a memory. Then frame S3 in ONE short turn: 'today we're mapping your life in 5-year chapters — not to dig into what was hard, but to notice where you've already moved from hard to better, and what in YOU made that possible.' Look at the intake form from S1 for the client's age, and pass it as clientAge in the render_exercise config so the table shows brackets up to their age. Render the life_timeline exercise early and give them time to sit with it. The moment they submit, the frontend will draw a graph with rising segments highlighted — you will see the same data as structured entries. Read the graph: find all RISING segments (grade went up from one bracket to the next, especially negative → positive or -2 → -1). Pick ONE rising segment — the sharpest, or the one that most stands out given what you already know about this client — and open with a single open question. Work this inquiry arc, ONE question at a time (never chain), SLOWLY, letting the client do most of the talking: (1) What was happening during that rise? What changed? (2) What inside YOU helped you move up? — this is the key question; don't let the client deflect only to external causes, gently return them to what THEY did/had. (3) Was there someone or something outside that also helped? (4) Looking back at that period now, what did you learn about yourself? (5) When have you drawn on that same quality since? (6) What does it mean that you ALREADY have this resource in you? If the client stays in the dark part of a period, honor it for a beat, then gently steer: 'and yet you came through — what helped?' If heavy material surfaces (trauma, abuse, grief, suicidality), slow down, do NOT probe further, name it with care, and if appropriate suggest they also speak with a therapist. You are a coach, not a therapist. Once one rising segment is fully mined, pick a second one and repeat — briefer the second time. By the end, the client MUST have named at least one inner resource / strength / quality of their own. Save each resource as a fact memory (e.g. 'has a resilience forged during early 20s — learned to reach out for help') so S5 can build on it. Save realizations as realization memories ('I already have X in me'). Co-design homework that invites the client to notice that SAME resource in their current week. Close only when criteria met AND past 45-55 minutes.",
+    toolkit: [
+      "life_timeline",
+      "rising_edge_focus",
+      "resource_mining",
+      "safety_check",
+    ],
     completionCriteria: [
-      "Timeline of 5-8 pivotal moments captured",
-      "Client named at least one recurring pattern or belief",
-      "Homework assigned as a commitment memory with followUpInSession=4",
+      "S2 homework briefly followed up (anything meaningful saved as memory)",
+      "Life timeline rendered and completed across the client's age brackets",
+      "Graph read and at least 2 rising segments identified",
+      "At least one rising segment fully explored: what happened, what internal resource helped, what external help was there",
+      "Client has NAMED at least one inner resource or strength in their own words (saved as fact memory for S5)",
+      "Client has articulated at least one realization about themselves (saved as realization memory)",
+      "Homework co-designed with the client and saved as a commitment memory with followUpInSession=4",
+      "Session has run at least 45-55 minutes before close",
     ],
     exercises: ["life_timeline"],
     homeworkGuidance:
-      "Stage: meaning-making about the past. Homework should help the client extract rather than re-live. Tune to the specific pattern or belief the client named as recurring — give them something that lets them see that pattern in their current week. Avoid anything that invites rumination or re-opening wounds; if heavy material surfaced, keep the homework especially light.",
+      "Stage: past-as-resource, not past-as-wound. Homework should invite the client to notice the SAME inner resource in their current week. Tune to the specific resource they named. Example shape: 'when you hit something hard this week, pause and ask: what in me has gotten me through something like this before?' — or if the resource was relational ('I know when to ask for help'), a micro-experiment of using it once. Avoid anything that invites rumination on the hard periods themselves.",
   },
   {
     number: 4,

@@ -4,6 +4,7 @@ import WheelOfLife from "./exercises/WheelOfLife";
 import Scale from "./exercises/Scale";
 import CardSort from "./exercises/CardSort";
 import IntakeForm from "./exercises/IntakeForm";
+import LifeTimeline from "./exercises/LifeTimeline";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -40,6 +41,15 @@ function ExerciseRenderer({
           title={payload.title}
           instructions={payload.instructions}
           domains={payload.config?.domains as string[] | undefined}
+          onSubmit={onSubmit}
+        />
+      );
+    case "life_timeline":
+      return (
+        <LifeTimeline
+          title={payload.title}
+          instructions={payload.instructions}
+          clientAge={payload.config?.clientAge as number | undefined}
           onSubmit={onSubmit}
         />
       );

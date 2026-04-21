@@ -17,6 +17,7 @@ const CATEGORIES: { label: string; items: string[] }[] = [
       "Optimism",
       "Positive thinking",
       "Determination",
+      "Gratitude",
       "Self-appreciation",
       "Wisdom",
       "Patience",
@@ -79,6 +80,7 @@ const CATEGORIES: { label: string; items: string[] }[] = [
       "Care for others",
       "Helping others",
       "Ability to give appreciation",
+      "Grace — ability to find favor with others",
       "Ability to host people",
       "Speaking eye-to-eye with anyone",
       "Ability to make friends easily",
@@ -99,6 +101,7 @@ const CATEGORIES: { label: string; items: string[] }[] = [
       "Aesthetic sense",
       "Management ability",
       "Precision",
+      "Ability to improvise",
       "Musical talent",
       "Singing talent",
       "Cooking",
@@ -151,7 +154,7 @@ export default function AssetsBank({ title, instructions, onSubmit }: Props) {
   }
 
   const count = selected.size;
-  const minPick = 15;
+  const minPick = 20;
   const ready = count >= minPick;
 
   const total = useMemo(() => ALL_ITEMS.length, []);

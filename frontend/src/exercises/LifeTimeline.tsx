@@ -175,9 +175,9 @@ function LifeGraph({
 }: {
   entries: Array<{ ageRange: string; grade: number; title: string }>;
 }) {
-  const W = 520;
+  const W = 560;
   const H = 280;
-  const PAD = { l: 50, r: 20, t: 20, b: 40 };
+  const PAD = { l: 80, r: 20, t: 20, b: 40 };
   const innerW = W - PAD.l - PAD.r;
   const innerH = H - PAD.t - PAD.b;
 
@@ -233,16 +233,23 @@ function LifeGraph({
           y2={H - PAD.b}
           stroke="#888"
         />
-        {[-2, -1, 0, 1, 2].map((v) => (
+        {[
+          { v: 2, label: "very good" },
+          { v: 1, label: "good" },
+          { v: 0, label: "" },
+          { v: -1, label: "bad" },
+          { v: -2, label: "very bad" },
+        ].map(({ v, label }) => (
           <g key={v}>
             <text
               x={PAD.l - 8}
               y={yScale(v) + 4}
-              fontSize={11}
+              fontSize={12}
               textAnchor="end"
-              fill="#666"
+              fill={v === 0 ? "#aaa" : "#555"}
+              fontWeight={v === 0 ? 400 : 500}
             >
-              {v}
+              {label}
             </text>
             <line
               x1={PAD.l - 3}

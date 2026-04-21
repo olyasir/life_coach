@@ -6,6 +6,8 @@ COPY frontend/package.json frontend/package-lock.json ./frontend/
 RUN npm install --prefix backend && npm install --prefix frontend
 COPY backend ./backend
 COPY frontend ./frontend
+ARG VITE_GOOGLE_CLIENT_ID
+ENV VITE_GOOGLE_CLIENT_ID=$VITE_GOOGLE_CLIENT_ID
 RUN npm run build --prefix frontend
 RUN npm run build --prefix backend
 

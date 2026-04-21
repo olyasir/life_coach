@@ -200,7 +200,27 @@ Read their responses carefully. Pick the one answer that feels most alive, revea
 });
 
 function formatExerciseResults(exerciseId: string, data: unknown): string {
-  if (data && typeof data === "object" && !Array.isArray(data)) {
+  if (exerciseId === "assets_bank" && isObj(data) && Array.isArray((data as any).selected)) {
+    const picks = (data as { selected: string[] }).selected;
+    return `Client selected ${picks.length} assets/strengths from the bank:\n${picks.map((p) => `- ${p}`).join("\n")}`;
+  }
+  if (exerciseId === "strengths_inventory" && isObj(data) && isObj((data as any).scores)) {
+    const scores = (data as { scores: Record<string, number> }).scores;
+    const entries = Object.entries(scores).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const byBand = (n: number) => entries.filter(([, v]) => v === n).map(([k]) => k);
+    const four = byBand(4);
+    const three = byBand(3);
+    const two = byBand(2);
+    const one = byBand(1);
+    const lines: string[] = [];
+    lines.push(`Client completed the 34-item Clifton strengths inventory.`);
+    if (four.length) lines.push(`Score 4 (very strongly): ${four.join(", ")}`);
+    if (three.length) lines.push(`Score 3 (strongly): ${three.join(", ")}`);
+    if (two.length) lines.push(`Score 2 (somewhat): ${two.join(", ")}`);
+    if (one.length) lines.push(`Score 1 (barely): ${one.join(", ")}`);
+    return lines.join("\n");
+  }
+  if (isObj(data)) {
     const entries = Object.entries(data as Record<string, unknown>);
     if (entries.length > 0) {
       return entries
@@ -209,6 +229,10 @@ function formatExerciseResults(exerciseId: string, data: unknown): string {
     }
   }
   return JSON.stringify(data, null, 2);
+}
+
+function isObj(x: unknown): x is Record<string, unknown> {
+  return !!x && typeof x === "object" && !Array.isArray(x);
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

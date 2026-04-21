@@ -7,6 +7,8 @@ import IntakeForm from "./exercises/IntakeForm";
 import LifeTimeline from "./exercises/LifeTimeline";
 import DreamArchaeology from "./exercises/DreamArchaeology";
 import DreamCanvas from "./exercises/DreamCanvas";
+import AssetsBank from "./exercises/AssetsBank";
+import StrengthsInventory from "./exercises/StrengthsInventory";
 import type { ExercisePayload, Message } from "./types";
 
 function getOrCreateUserId(): string {
@@ -66,6 +68,22 @@ function ExerciseRenderer({
     case "dream_canvas":
       return (
         <DreamCanvas
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "assets_bank":
+      return (
+        <AssetsBank
+          title={payload.title}
+          instructions={payload.instructions}
+          onSubmit={onSubmit}
+        />
+      );
+    case "strengths_inventory":
+      return (
+        <StrengthsInventory
           title={payload.title}
           instructions={payload.instructions}
           onSubmit={onSubmit}

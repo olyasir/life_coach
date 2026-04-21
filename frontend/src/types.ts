@@ -10,6 +10,7 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
   exercise?: ExercisePayload;
+  preview?: boolean;
 }
 
 export interface MessageResponse {

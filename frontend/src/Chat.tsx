@@ -23,6 +23,19 @@ function getOrCreateUserId(): string {
 
 const USER_ID = getOrCreateUserId();
 
+const PREVIEW_EXERCISES: Array<{ id: string; title: string; instructions: string }> = [
+  { id: "intake_form", title: "Intake — who you are", instructions: "A few questions to start. Take your time." },
+  { id: "wheel_of_life", title: "Wheel of life", instructions: "Score each domain 1-10 as it feels RIGHT NOW." },
+  { id: "life_timeline", title: "Life timeline", instructions: "Title each 5-year chapter you've lived, and grade it." },
+  { id: "dream_archaeology", title: "Dream archaeology — warm-up", instructions: "Answer quickly, don't overthink. First thing that comes." },
+  { id: "dream_canvas", title: "Your dream", instructions: "Write your dream freely, then the doing / having / being triad." },
+  { id: "assets_bank", title: "Assets & strengths bank", instructions: "Tap everything that applies to you. Go broad." },
+  { id: "strengths_inventory", title: "Know your strengths — 34-item inventory", instructions: "Score each strength 1-4 as it shows up in you." },
+  { id: "needs_scale", title: "Needs", instructions: "Rate how met each need is right now." },
+  { id: "strengths_card_sort", title: "Strengths card sort", instructions: "Pick your top 5." },
+  { id: "values_card_sort", title: "Values card sort", instructions: "Pick your top 5 values." },
+];
+
 function ExerciseRenderer({
   payload,
   onSubmit,
@@ -184,6 +197,32 @@ export default function Chat() {
     }
   }
 
+  function previewExercise(id: string) {
+    const def = PREVIEW_EXERCISES.find((e) => e.id === id);
+    if (!def) return;
+    const exercise: ExercisePayload = {
+      exerciseId: def.id,
+      title: def.title,
+      instructions: def.instructions,
+      config: def.id === "life_timeline" ? { clientAge: 40 } : {},
+    };
+    setMessages((m) => [
+      ...m,
+      {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: `[preview: ${def.id}]`,
+      },
+      {
+        id: crypto.randomUUID(),
+        role: "assistant",
+        content: "",
+        exercise,
+        preview: true,
+      },
+    ]);
+  }
+
   async function onExerciseSubmit(exerciseId: string, data: unknown) {
     setSending(true);
     try {
@@ -236,6 +275,31 @@ export default function Chat() {
               </option>
             ))}
           </select>
+          <select
+            value=""
+            onChange={(e) => {
+              if (e.target.value) {
+                previewExercise(e.target.value);
+                e.target.value = "";
+              }
+            }}
+            style={{
+              background: "transparent",
+              color: "#888",
+              border: "1px solid #d8d3c4",
+              padding: "4px 8px",
+              borderRadius: 999,
+              fontSize: 12,
+              cursor: "pointer",
+            }}
+          >
+            <option value="">preview exercise…</option>
+            {PREVIEW_EXERCISES.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.id}
+              </option>
+            ))}
+          </select>
           <button
             onClick={async () => {
               if (!confirm("Reset everything for this user?")) return;
@@ -269,7 +333,21 @@ export default function Chat() {
             <ExerciseRenderer
               key={m.id}
               payload={m.exercise}
-              onSubmit={(data) => onExerciseSubmit(m.exercise!.exerciseId, data)}
+              onSubmit={(data) => {
+                if (m.preview) {
+                  console.log(`[preview ${m.exercise!.exerciseId}] submitted:`, data);
+                  setMessages((prev) => [
+                    ...prev,
+                    {
+                      id: crypto.randomUUID(),
+                      role: "assistant",
+                      content: `[preview submit received — see console. Payload keys: ${Object.keys(data as object ?? {}).join(", ") || "(raw)"}]`,
+                    },
+                  ]);
+                  return;
+                }
+                onExerciseSubmit(m.exercise!.exerciseId, data);
+              }}
             />
           ) : (
             <div key={m.id} className={`bubble ${m.role}`}>

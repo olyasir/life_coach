@@ -6,6 +6,17 @@ const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const JWT_SECRET = process.env.JWT_SECRET ?? "dev-secret-change-me";
 const JWT_EXPIRES_IN = "30d";
 
+const TEST_USER_EMAILS = new Set(
+  (process.env.TEST_USER_EMAILS ?? "")
+    .split(",")
+    .map((e) => e.trim().toLowerCase())
+    .filter(Boolean),
+);
+
+function isTestEmail(email: string): boolean {
+  return TEST_USER_EMAILS.has(email.toLowerCase());
+}
+
 if (!GOOGLE_CLIENT_ID) {
   console.warn(
     "⚠️  GOOGLE_CLIENT_ID not set — Google sign-in will fail. Set it in your env.",
@@ -22,6 +33,7 @@ export interface SessionUser {
   email: string;
   name?: string;
   picture?: string;
+  isTestUser: boolean;
 }
 
 export async function verifyGoogleIdToken(idToken: string): Promise<SessionUser> {
@@ -41,6 +53,7 @@ export async function verifyGoogleIdToken(idToken: string): Promise<SessionUser>
     email: payload.email,
     name: payload.name,
     picture: payload.picture,
+    isTestUser: isTestEmail(payload.email),
   };
 }
 
@@ -55,7 +68,19 @@ export function verifySessionToken(token: string): SessionUser {
     email: decoded.email,
     name: decoded.name,
     picture: decoded.picture,
+    isTestUser: isTestEmail(decoded.email),
   };
+}
+
+export function requireTestUser(
+  req: AuthedRequest,
+  res: Response,
+  next: NextFunction,
+) {
+  if (!req.user?.isTestUser) {
+    return res.status(403).json({ error: "test-user only" });
+  }
+  next();
 }
 
 export interface AuthedRequest extends Request {

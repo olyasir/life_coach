@@ -24,6 +24,7 @@ export interface SessionUser {
   email: string;
   name?: string;
   picture?: string;
+  isTestUser: boolean;
 }
 
 export interface LockStatus {

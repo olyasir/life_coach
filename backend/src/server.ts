@@ -21,6 +21,7 @@ import {
 import {
   type AuthedRequest,
   requireAuth,
+  requireTestUser,
   signSessionToken,
   verifyGoogleIdToken,
 } from "./auth.js";
@@ -29,8 +30,6 @@ import type { ChatTurn } from "./types.js";
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: "1mb" }));
-
-const DEBUG_ROUTES_ENABLED = process.env.DEBUG_ROUTES === "1";
 
 app.post("/api/auth/google", async (req, res) => {
   const { idToken } = req.body ?? {};
@@ -57,13 +56,13 @@ app.get("/api/me", requireAuth, async (req: AuthedRequest, res) => {
   res.json({
     user: req.user,
     journal,
-    lock: sessionLockStatus(journal),
+    lock: sessionLockStatus(journal, { isTestUser: req.user!.isTestUser }),
   });
 });
 
 app.get("/api/lock-status", requireAuth, async (req: AuthedRequest, res) => {
   const journal = await loadJournal(req.user!.userId);
-  res.json(sessionLockStatus(journal));
+  res.json(sessionLockStatus(journal, { isTestUser: req.user!.isTestUser }));
 });
 
 app.get("/api/journal", requireAuth, async (req: AuthedRequest, res) => {
@@ -71,8 +70,11 @@ app.get("/api/journal", requireAuth, async (req: AuthedRequest, res) => {
   res.json(journal);
 });
 
-if (DEBUG_ROUTES_ENABLED) {
-  app.post("/api/debug/goto", requireAuth, async (req: AuthedRequest, res) => {
+app.post(
+  "/api/debug/goto",
+  requireAuth,
+  requireTestUser,
+  async (req: AuthedRequest, res) => {
     const n = Number(req.body?.sessionNumber);
     if (!Number.isInteger(n) || n < 1 || n > 12) {
       return res.status(400).json({ error: "sessionNumber must be 1-12" });
@@ -88,9 +90,14 @@ if (DEBUG_ROUTES_ENABLED) {
     }
     await saveJournal(journal);
     res.json({ currentSession: journal.currentSession });
-  });
+  },
+);
 
-  app.post("/api/debug/reset", requireAuth, async (req: AuthedRequest, res) => {
+app.post(
+  "/api/debug/reset",
+  requireAuth,
+  requireTestUser,
+  async (req: AuthedRequest, res) => {
     const journal = await loadJournal(req.user!.userId);
     journal.currentSession = 1;
     journal.sessions = [
@@ -100,8 +107,8 @@ if (DEBUG_ROUTES_ENABLED) {
     journal.exercises = [];
     await saveJournal(journal);
     res.json({ ok: true });
-  });
-}
+  },
+);
 
 app.post("/api/profile", requireAuth, async (req: AuthedRequest, res) => {
   const journal = await loadJournal(req.user!.userId);
@@ -119,7 +126,7 @@ app.post("/api/message", requireAuth, async (req: AuthedRequest, res) => {
   }
 
   const journal = await loadJournal(req.user!.userId);
-  const lock = sessionLockStatus(journal);
+  const lock = sessionLockStatus(journal, { isTestUser: req.user!.isTestUser });
   if (lock.locked) {
     return res.status(423).json({ error: "session locked", lock });
   }

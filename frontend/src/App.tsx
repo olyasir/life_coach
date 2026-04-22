@@ -80,7 +80,7 @@ export default function App() {
       <LockScreen user={state.user} lock={state.lock} onUnlocked={refresh} />
     );
   } else {
-    content = <Chat />;
+    content = <Chat user={state.user} />;
   }
 
   return (

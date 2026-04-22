@@ -189,6 +189,7 @@ export function attachPreSessionBrief(
 }
 
 const SESSION_COOLDOWN_MS = 7 * 24 * 60 * 60 * 1000;
+const TEST_USER_COOLDOWN_MS = 60 * 1000;
 
 export interface LockStatus {
   locked: boolean;
@@ -197,7 +198,10 @@ export interface LockStatus {
   previousCompletedAt?: string;
 }
 
-export function sessionLockStatus(journal: UserJournal): LockStatus {
+export function sessionLockStatus(
+  journal: UserJournal,
+  opts: { isTestUser?: boolean } = {},
+): LockStatus {
   const currentSession = journal.currentSession;
   const rec = journal.sessions.find((s) => s.sessionNumber === currentSession);
   const currentStarted = (rec?.turns.length ?? 0) > 0;
@@ -213,8 +217,9 @@ export function sessionLockStatus(journal: UserJournal): LockStatus {
   );
   if (!prev?.completedAt) return { locked: false, currentSession };
 
+  const cooldownMs = opts.isTestUser ? TEST_USER_COOLDOWN_MS : SESSION_COOLDOWN_MS;
   const unlocksAt = new Date(
-    new Date(prev.completedAt).getTime() + SESSION_COOLDOWN_MS,
+    new Date(prev.completedAt).getTime() + cooldownMs,
   );
   if (unlocksAt.getTime() <= Date.now()) {
     return {

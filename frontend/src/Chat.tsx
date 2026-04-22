@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { getJournal, gotoSession, resetJournal, sendMessage, submitExercise } from "./api";
+import { getJournal, gotoSession, resetJournal, sendMessage, submitExercise, type SessionUser } from "./api";
 import WheelOfLife from "./exercises/WheelOfLife";
 import IntakeForm from "./exercises/IntakeForm";
 import LifeTimeline from "./exercises/LifeTimeline";
@@ -354,7 +354,7 @@ function ExerciseRenderer({
   }
 }
 
-export default function Chat() {
+export default function Chat({ user }: { user: SessionUser }) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
@@ -471,73 +471,89 @@ export default function Chat() {
       <div className="header">
         <h2 style={{ margin: 0 }}>Coach</h2>
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
-          <select
-            value={currentSession}
-            onChange={async (e) => {
-              const n = Number(e.target.value);
-              await gotoSession(n);
-              setCurrentSession(n);
-              setMessages([]);
-            }}
-            style={{
-              background: "#2a5d4e",
-              color: "white",
-              border: "none",
-              padding: "4px 8px",
-              borderRadius: 999,
-              fontSize: 13,
-            }}
-          >
-            {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>
-                Session {n}
-              </option>
-            ))}
-          </select>
-          <select
-            value=""
-            onChange={(e) => {
-              if (e.target.value) {
-                previewExercise(e.target.value);
-                e.target.value = "";
-              }
-            }}
-            style={{
-              background: "transparent",
-              color: "#888",
-              border: "1px solid #d8d3c4",
-              padding: "4px 8px",
-              borderRadius: 999,
-              fontSize: 12,
-              cursor: "pointer",
-            }}
-          >
-            <option value="">preview exercise…</option>
-            {PREVIEW_EXERCISES.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.id}
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={async () => {
-              if (!confirm("Reset everything for this user?")) return;
-              await resetJournal();
-              setCurrentSession(1);
-              setMessages([]);
-            }}
-            style={{
-              background: "transparent",
-              color: "#888",
-              border: "1px solid #d8d3c4",
-              padding: "4px 10px",
-              borderRadius: 999,
-              fontSize: 12,
-              cursor: "pointer",
-            }}
-          >
-            reset
-          </button>
+          {user.isTestUser ? (
+            <>
+              <select
+                value={currentSession}
+                onChange={async (e) => {
+                  const n = Number(e.target.value);
+                  await gotoSession(n);
+                  setCurrentSession(n);
+                  setMessages([]);
+                }}
+                style={{
+                  background: "#2a5d4e",
+                  color: "white",
+                  border: "none",
+                  padding: "4px 8px",
+                  borderRadius: 999,
+                  fontSize: 13,
+                }}
+              >
+                {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={n}>
+                    Session {n}
+                  </option>
+                ))}
+              </select>
+              <select
+                value=""
+                onChange={(e) => {
+                  if (e.target.value) {
+                    previewExercise(e.target.value);
+                    e.target.value = "";
+                  }
+                }}
+                style={{
+                  background: "transparent",
+                  color: "#888",
+                  border: "1px solid #d8d3c4",
+                  padding: "4px 8px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  cursor: "pointer",
+                }}
+              >
+                <option value="">preview exercise…</option>
+                {PREVIEW_EXERCISES.map((e) => (
+                  <option key={e.id} value={e.id}>
+                    {e.id}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={async () => {
+                  if (!confirm("Reset everything for this user?")) return;
+                  await resetJournal();
+                  setCurrentSession(1);
+                  setMessages([]);
+                }}
+                style={{
+                  background: "transparent",
+                  color: "#888",
+                  border: "1px solid #d8d3c4",
+                  padding: "4px 10px",
+                  borderRadius: 999,
+                  fontSize: 12,
+                  cursor: "pointer",
+                }}
+              >
+                reset
+              </button>
+            </>
+          ) : (
+            <span
+              style={{
+                background: "#2a5d4e",
+                color: "white",
+                padding: "4px 12px",
+                borderRadius: 999,
+                fontSize: 13,
+              }}
+            >
+              Session {currentSession}
+            </span>
+          )}
         </div>
       </div>
 
